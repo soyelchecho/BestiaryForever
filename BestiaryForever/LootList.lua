@@ -32,12 +32,20 @@ function ns.ItemName(id)
     return name
 end
 
+-- Icono y calidad: los del juego si ya cargó el ítem; si no, los de la base de datos (API de ForeverDB).
 function ns.ItemIcon(id)
-    return C_Item.GetItemIconByID(id) or QUESTION_ICON
+    local icon = C_Item.GetItemIconByID(id)
+    if icon and icon ~= QUESTION_ICON then return icon end
+    local meta = ns.itemMeta and ns.itemMeta[id]
+    return (meta and meta[2] and meta[2] > 0 and meta[2]) or icon or QUESTION_ICON
 end
 
 function ns.ItemQualityColor(id)
     local q = C_Item.GetItemQualityByID(id)
+    if q == nil then
+        local meta = ns.itemMeta and ns.itemMeta[id]
+        q = meta and meta[1]
+    end
     local c = q and ITEM_QUALITY_COLORS and ITEM_QUALITY_COLORS[q]
     if c then return c.r, c.g, c.b end
     return 1, 1, 1

@@ -7,7 +7,7 @@ Target a creature and a small borderless window shows its 3D portrait, level, he
 
 **Loot data from [ForeverDB.net](https://foreverdb.net).**
 
-> **Status: beta (v0.2.4).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
+> **Status: beta (v0.2.5).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
 
 *[Leer en español](#español)*
 
@@ -64,7 +64,9 @@ python tools/build_bestiary_data.py --refresh
 
 The first command is optional: it downloads the CMaNGOS classic-db SQLite release (unzip it in `data/raw/cmangos/`). The script reads levels, rank, type, model and spawn points from it, and places each creature in its zone with ForeverDB's zone outlines. The script also downloads ForeverDB's public data, rate-limited and cached in `data/raw/`: item sources, zones, dungeons and English/Spanish item names. It writes `BestiaryForever/Data/Loot.lua`, `BestiaryForever/Data/Items.lua` and `data/creatures.json`.
 
-Current data: **3,161 creatures** (2,761 placed in a zone or dungeon), **22,852 drops**, **50 zones**, **47 dungeons and raids** and **5,833 item names**.
+Item quality and icons come from the official [ForeverDB API](https://foreverdb.net/developers), which needs a key. Set it in the `FOREVERDB_API_KEY` environment variable (never commit it). Without a key, the script still works and the game loads quality and icons itself. The API allows 60 requests a minute; the script waits 1.1 s between pages and caches the result.
+
+Current data: **3,161 creatures** (2,761 placed in a zone or dungeon), **22,852 drops**, **50 zones**, **47 dungeons and raids** and **5,833 items** with names, quality and icon.
 
 ## Credits and license
 

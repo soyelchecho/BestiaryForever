@@ -107,6 +107,60 @@ def load_search_names(meta: dict, refresh: bool) -> dict[int, str]:
             for i, s in re.findall(r'\[(\d+)\]="((?:[^"\\]|\\.)*)"', text)}
 
 
+def api_key() -> str | None:
+    """Clave de la API de ForeverDB: variable de entorno FOREVERDB_API_KEY (o la del usuario en Windows, si
+    `setx` la guardó después de abrir esta terminal). Nunca se imprime."""
+    import os
+    key = os.environ.get("FOREVERDB_API_KEY")
+    if not key and sys.platform == "win32":
+        try:
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as k:
+                key = winreg.QueryValueEx(k, "FOREVERDB_API_KEY")[0]
+        except OSError:
+            key = None
+    return key or None
+
+
+def load_api_items(refresh: bool) -> dict[int, tuple[int, int]]:
+    """Calidad e icono de cada ítem desde la API oficial de ForeverDB (/api/v1/items, de 100 en 100).
+    Límites de la API: 60 peticiones/minuto y 10.000/día; se espera 1,1 s entre páginas y se respeta Retry-After."""
+    f = CACHE / "api_items.json"
+    if not refresh and f.exists():
+        return {int(k): tuple(v) for k, v in json.loads(f.read_text(encoding="utf-8")).items()}
+    key = api_key()
+    if not key:
+        print("Aviso: sin FOREVERDB_API_KEY; los ítems no tendrán calidad ni icono de la API (el juego los cargará).")
+        return {}
+    import re
+    out: dict[int, tuple[int, int]] = {}
+    offset, total = 0, None
+    while total is None or offset < total:
+        req = urllib.request.Request(f"{BASE}/api/v1/items?limit=100&offset={offset}",
+                                     headers={"User-Agent": USER_AGENT, "Accept": "application/json", "X-API-Key": key})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            if e.code == 429 or e.code >= 500:
+                wait = int(e.headers.get("Retry-After", "0") or 0) or 10
+                print(f"  API: HTTP {e.code}, reintento en {wait}s", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            raise
+        total = body["meta"]["total"]
+        for it in body["data"]:
+            icon = re.search(r"/icons/(\d+)\.", it.get("icon") or "")
+            out[int(it["id"])] = (int(it.get("qualityId") or 0), int(icon.group(1)) if icon else 0)
+        offset += 100
+        if offset // 100 % 25 == 0:
+            print(f"  API ítems: {min(offset, total)}/{total}")
+        time.sleep(1.1)
+    CACHE.mkdir(parents=True, exist_ok=True)
+    f.write_text(json.dumps({str(k): v for k, v in out.items()}), encoding="utf-8")
+    return out
+
+
 def load_translator(refresh: bool) -> list[list]:
     index = cached("/data/translator/index.json", "translator_index.json", refresh)
     rows: list[list] = []
@@ -340,7 +394,7 @@ def write_lua(creatures, zones, continents, instances, version) -> None:
     OUT_LUA.write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
-def write_items(names: dict[int, tuple[str, str]], version: str) -> None:
+def write_items(names: dict[int, tuple[str, str]], item_meta: dict[int, tuple[int, int]], version: str) -> None:
     out = [
         "-- Generado por tools/build_bestiary_data.py: no editar a mano.",
         "-- Nombres de ítems en inglés y español para la búsqueda inversa. Data from ForeverDB.net (https://foreverdb.net), " + version + ".",
@@ -354,6 +408,19 @@ def write_items(names: dict[int, tuple[str, str]], version: str) -> None:
         val = en if not es or es == en else en + "\t" + es
         line.append(f"[{item}]={lua_str(val)}")
         if len(line) == 20:
+            out.append(",".join(line) + ",")
+            line = []
+    if line:
+        out.append(",".join(line) + ",")
+    out.append("}")
+    # Calidad e icono (API de ForeverDB), para mostrar el color y el icono antes de que el juego cargue el ítem
+    out.append("-- [id] = {calidad (0 gris .. 5 legendario), icono (FileDataID)}  (API de ForeverDB)")
+    out.append("ns.itemMeta = {")
+    line = []
+    for item in sorted(item_meta):
+        q, icon = item_meta[item]
+        line.append(f"[{item}]={{{q},{icon}}}")
+        if len(line) == 25:
             out.append(",".join(line) + ",")
             line = []
     if line:
@@ -431,7 +498,11 @@ def main() -> None:
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(creatures, ensure_ascii=False, indent=1), encoding="utf-8")
     write_lua(creatures, zones, continents, instances, version)
-    write_items(names, version)
+    api_items = load_api_items(args.refresh)
+    loot_items = {d["item"] for c in creatures.values() for d in c["loot"]}
+    item_meta = {i: api_items[i] for i in loot_items if i in api_items}
+    write_items(names, item_meta, version)
+    print(f"Calidad e icono (API): {len(item_meta)} de {len(loot_items)} ítems de botín")
 
     located = sum(1 for c in creatures.values() if c["zones"] or c.get("instance"))
     print(f"Ítems con fuentes: {len(sources)}  ·  nombres de ítems: {len(names)}")
