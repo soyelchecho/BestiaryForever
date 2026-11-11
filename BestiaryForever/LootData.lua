@@ -105,6 +105,13 @@ function ns.FormatPct(p)
     return (("%.2f"):format(p):gsub("0$", ""))
 end
 
+-- Versión corta para los iconos pequeños de la ventana del objetivo: "<1" o número entero.
+function ns.FormatPctShort(p)
+    if not p then return "?" end
+    if p < 1 then return "<1" end
+    return ("%d"):format(math.floor(p + 0.5))
+end
+
 ns.TIER_COLORS = {
     own = { 0.40, 1.00, 0.40 },
     forever = { 0.35, 0.75, 1.00 },

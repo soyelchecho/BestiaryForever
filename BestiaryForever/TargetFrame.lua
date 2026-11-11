@@ -280,7 +280,7 @@ function ns.RefreshTargetIcons()
             local qr, qg, qb = ns.ItemQualityColor(r.item)
             b.border:SetColorTexture(qr, qg, qb, 0.8)
             local c = ns.TIER_COLORS[r.tier] or ns.TIER_COLORS.seen
-            b.pct:SetText(r.pct and (ns.FormatPct(r.pct) .. "%") or "")
+            b.pct:SetText(r.pct and (ns.FormatPctShort(r.pct) .. "%") or "")
             b.pct:SetTextColor(c[1], c[2], c[3])
             b:Show()
             b.pct:Show()

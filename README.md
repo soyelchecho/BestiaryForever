@@ -7,7 +7,7 @@ Target a creature and a small borderless window shows its 3D portrait, level, he
 
 **Loot data from [ForeverDB.net](https://foreverdb.net).**
 
-> **Status: beta (v0.2.6).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
+> **Status: beta (v0.2.7).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
 
 *[Leer en español](#español)*
 

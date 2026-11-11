@@ -4,7 +4,7 @@
 ## Notes-esES: Selecciona una criatura para ver su nivel, vida y el botín que puede soltar. Guarda un bestiario de cada criatura que encuentras. Datos de ForeverDB.net.
 ## Notes-esMX: Selecciona una criatura para ver su nivel, vida y el botín que puede soltar. Guarda un bestiario de cada criatura que encuentras. Datos de ForeverDB.net.
 ## Author: soyelchecho
-## Version: 0.2.6
+## Version: 0.2.7
 ## SavedVariables: BestiaryForeverDB
 ## IconTexture: Interface\AddOns\BestiaryForever\Media\Icon
 ## AddonCompartmentFunc: BestiaryForever_OnAddonCompartmentClick

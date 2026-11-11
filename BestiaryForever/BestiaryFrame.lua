@@ -184,7 +184,7 @@ local function ProgressText(discovered, total)
     return ("%d/%d  ·  %d%%"):format(discovered, total, ns.Percent(discovered, total))
 end
 
-local ZONE_ROW_H, HEADER_ROW_H = 26, 34
+local ZONE_ROW_H, HEADER_ROW_H, TOTAL_ROW_H = 26, 34, 50
 
 function RenderSidebar()
     local regions = ns.GetRegions()
@@ -201,25 +201,36 @@ function RenderSidebar()
             row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
             row.name = Font(row, "GameFontHighlightSmall")
             row.count = Font(row, "GameFontDisableSmall", "RIGHT")
-            row.count:SetPoint("TOPRIGHT", -2, -4)
-            row.name:SetPoint("RIGHT", row.count, "LEFT", -4, 0)
             row.bar = NewProgressBar(row, 3)
             row:SetScript("OnClick", function(self) if self.key then SelectRegion(self.key) end end)
             frame.sideRows[i] = row
         end
-        local h = reg.header and HEADER_ROW_H or ZONE_ROW_H
+        local h = reg.total and TOTAL_ROW_H or (reg.header and HEADER_ROW_H or ZONE_ROW_H)
         row:SetSize(SIDEBAR_W - 26, h)
         row:ClearAllPoints()
         row:SetPoint("TOPLEFT", 0, -y)
         y = y + h
+        row.name:ClearAllPoints()
+        row.count:ClearAllPoints()
         local discovered, total
         if reg.header then
             row.key = nil
             discovered, total = ns.GroupStats(reg.keys)
-            row.name:SetFontObject(reg.total and "GameFontNormalLarge" or "GameFontNormal")
-            row.name:SetPoint("TOPLEFT", 2, reg.total and -4 or -10)
             row.name:SetText(reg.header)
-            row.count:SetPoint("TOPRIGHT", -2, reg.total and -6 or -12)
+            if reg.total then
+                -- El total: título grande en su propia línea y el contador debajo, para que no se corte
+                row.name:SetFontObject("GameFontNormalLarge")
+                row.name:SetPoint("TOPLEFT", 2, -4)
+                row.name:SetPoint("RIGHT", -2, 0)
+                row.count:SetPoint("TOPLEFT", row.name, "BOTTOMLEFT", 0, -3)
+                row.count:SetJustifyH("LEFT")
+            else
+                row.name:SetFontObject("GameFontNormal")
+                row.count:SetPoint("TOPRIGHT", -2, -12)
+                row.count:SetJustifyH("RIGHT")
+                row.name:SetPoint("TOPLEFT", 2, -10)
+                row.name:SetPoint("RIGHT", row.count, "LEFT", -4, 0)
+            end
             row.sel:Hide()
             row:GetHighlightTexture():SetAlpha(0)
             row.bar:SetHeight(reg.total and 6 or 4)
@@ -228,9 +239,11 @@ function RenderSidebar()
             local s = ns.RegionStats(reg.key)
             discovered, total = s.discovered, s.total
             row.name:SetFontObject("GameFontHighlightSmall")
-            row.name:SetPoint("TOPLEFT", 10, -4)
-            row.name:SetText(ns.RegionName(reg.key))
             row.count:SetPoint("TOPRIGHT", -2, -4)
+            row.count:SetJustifyH("RIGHT")
+            row.name:SetPoint("TOPLEFT", 10, -4)
+            row.name:SetPoint("RIGHT", row.count, "LEFT", -4, 0)
+            row.name:SetText(ns.RegionName(reg.key))
             row.sel:SetShown(reg.key == state.region)
             row:GetHighlightTexture():SetAlpha(1)
             row.bar:SetHeight(3)
