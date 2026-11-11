@@ -12,7 +12,7 @@ local MAIN_W = W - MAIN_X - 14
 local COLS = 4
 local CELL_W = math.floor((MAIN_W - 26) / COLS)
 local CELL_H = 156
-local HEADER_H = 74
+local HEADER_H = 92
 local QUESTION_ICON = 134400
 
 local frame
@@ -158,51 +158,93 @@ local function SelectRegion(key)
     RenderGrid()
 end
 
+-- Barra de progreso fina: dorada mientras falta, verde al completar.
+local function NewProgressBar(parent, height)
+    local bar = CreateFrame("StatusBar", nil, parent)
+    bar:SetHeight(height)
+    bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+    bar:SetMinMaxValues(0, 1)
+    local bg = bar:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetColorTexture(1, 1, 1, 0.08)
+    return bar
+end
+
+local function SetProgress(bar, discovered, total)
+    bar:SetMinMaxValues(0, math.max(1, total))
+    bar:SetValue(discovered)
+    if total > 0 and discovered >= total then
+        bar:SetStatusBarColor(0.4, 0.9, 0.4)
+    else
+        bar:SetStatusBarColor(0.89, 0.71, 0.36)
+    end
+end
+
+local function ProgressText(discovered, total)
+    return ("%d/%d  ·  %d%%"):format(discovered, total, ns.Percent(discovered, total))
+end
+
+local ZONE_ROW_H, HEADER_ROW_H = 26, 34
+
 function RenderSidebar()
     local regions = ns.GetRegions()
     local content = frame.sidebar.content
     frame.sideRows = frame.sideRows or {}
+    local y = 0
     for i, reg in ipairs(regions) do
         local row = frame.sideRows[i]
         if not row then
             row = CreateFrame("Button", nil, content)
-            row:SetSize(SIDEBAR_W - 26, 18)
-            row:SetPoint("TOPLEFT", 0, -(i - 1) * 18)
             row.sel = row:CreateTexture(nil, "BACKGROUND")
             row.sel:SetAllPoints()
             row.sel:SetColorTexture(0.89, 0.71, 0.36, 0.22)
             row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
             row.name = Font(row, "GameFontHighlightSmall")
-            row.name:SetPoint("LEFT", 10, 0)
-            row.name:SetPoint("RIGHT", -44, 0)
             row.count = Font(row, "GameFontDisableSmall", "RIGHT")
-            row.count:SetPoint("RIGHT", -2, 0)
+            row.count:SetPoint("TOPRIGHT", -2, -4)
+            row.name:SetPoint("RIGHT", row.count, "LEFT", -4, 0)
+            row.bar = NewProgressBar(row, 3)
             row:SetScript("OnClick", function(self) if self.key then SelectRegion(self.key) end end)
             frame.sideRows[i] = row
         end
+        local h = reg.header and HEADER_ROW_H or ZONE_ROW_H
+        row:SetSize(SIDEBAR_W - 26, h)
+        row:ClearAllPoints()
+        row:SetPoint("TOPLEFT", 0, -y)
+        y = y + h
+        local discovered, total
         if reg.header then
             row.key = nil
-            row.name:SetFontObject("GameFontNormal")
-            row.name:SetPoint("LEFT", 2, 0)
+            discovered, total = ns.GroupStats(reg.keys)
+            row.name:SetFontObject(reg.total and "GameFontNormalLarge" or "GameFontNormal")
+            row.name:SetPoint("TOPLEFT", 2, reg.total and -4 or -10)
             row.name:SetText(reg.header)
-            row.count:SetText("")
+            row.count:SetPoint("TOPRIGHT", -2, reg.total and -6 or -12)
             row.sel:Hide()
             row:GetHighlightTexture():SetAlpha(0)
+            row.bar:SetHeight(reg.total and 6 or 4)
         else
             row.key = reg.key
-            row.name:SetFontObject("GameFontHighlightSmall")
-            row.name:SetPoint("LEFT", 10, 0)
-            row.name:SetText(ns.RegionName(reg.key))
             local s = ns.RegionStats(reg.key)
-            row.count:SetText(("%d/%d"):format(s.discovered, s.total))
-            if s.total > 0 and s.discovered == s.total then row.count:SetTextColor(0.4, 1, 0.4) else row.count:SetTextColor(0.6, 0.6, 0.6) end
+            discovered, total = s.discovered, s.total
+            row.name:SetFontObject("GameFontHighlightSmall")
+            row.name:SetPoint("TOPLEFT", 10, -4)
+            row.name:SetText(ns.RegionName(reg.key))
+            row.count:SetPoint("TOPRIGHT", -2, -4)
             row.sel:SetShown(reg.key == state.region)
             row:GetHighlightTexture():SetAlpha(1)
+            row.bar:SetHeight(3)
         end
+        row.count:SetText(ProgressText(discovered, total))
+        if total > 0 and discovered >= total then row.count:SetTextColor(0.4, 1, 0.4) else row.count:SetTextColor(0.6, 0.6, 0.6) end
+        row.bar:ClearAllPoints()
+        row.bar:SetPoint("BOTTOMLEFT", reg.header and 2 or 10, 5)
+        row.bar:SetPoint("BOTTOMRIGHT", -2, 5)
+        SetProgress(row.bar, discovered, total)
         row:Show()
     end
     for i = #regions + 1, #frame.sideRows do frame.sideRows[i]:Hide() end
-    content:SetHeight(math.max(1, #regions * 18))
+    content:SetHeight(math.max(1, y))
 end
 
 function RenderHeader()
@@ -213,6 +255,9 @@ function RenderHeader()
     h.levels:SetText(lv and L.LEVEL:format(lv) or "")
     h.counter:SetText(("%d / %d"):format(s.discovered, s.total))
     h.mapBtn:SetShown(ns.RegionMap(state.region) ~= nil)
+    SetProgress(h.bar, s.discovered, s.total)
+    h.pct:SetText(ns.Percent(s.discovered, s.total) .. "%")
+    if s.total > 0 and s.discovered >= s.total then h.pct:SetTextColor(0.4, 1, 0.4) else h.pct:SetTextColor(1, 0.82, 0) end
     h.stats[1].value:SetText(s.looted)
     h.stats[2].value:SetText(("%d/%d"):format(s.rares, s.raresTotal))
     h.stats[3].value:SetText(("%d/%d"):format(s.elites, s.elitesTotal))
@@ -428,13 +473,20 @@ local function BuildBestiaryPage(page)
     h.mapBtn:SetPoint("RIGHT", pill, "LEFT", -8, 0)
     h.mapBtn:SetText(L.OPEN_MAP)
     h.mapBtn:SetScript("OnClick", function() ns.OpenMap(ns.RegionMap(state.region)) end)
+    -- Barra de progreso de la zona con su porcentaje
+    h.pct = Font(h, "GameFontNormal", "RIGHT")
+    h.pct:SetPoint("TOPRIGHT", -12, -46)
+    h.pct:SetWidth(60)
+    h.bar = NewProgressBar(h, 8)
+    h.bar:SetPoint("TOPLEFT", 12, -50)
+    h.bar:SetPoint("RIGHT", h.pct, "LEFT", -8, 0)
     h.stats = {}
     local labels = { L.LOOTED_SHORT, L.RARES_SHORT, L.ELITES_SHORT, L.BOSSES_SHORT }
     local statW = (MAIN_W - 24) / #labels
     for i, label in ipairs(labels) do
         local st = CreateFrame("Frame", nil, h)
-        st:SetSize(statW, 30)
-        st:SetPoint("BOTTOMLEFT", 12 + (i - 1) * statW, 6)
+        st:SetSize(statW, 24)
+        st:SetPoint("BOTTOMLEFT", 12 + (i - 1) * statW, 4)
         st.value = Font(st, "GameFontNormal", "LEFT")
         st.value:SetPoint("LEFT", 0, 0)
         st.label = Font(st, "GameFontDisableSmall", "LEFT")
@@ -837,7 +889,15 @@ local function Build()
     frame.credit:SetText(L.CREDIT)
 
     frame:SetScript("OnShow", function()
-        if not state.region then state.region = ns.CurrentRegion() or (ns.GetRegions()[2] and ns.GetRegions()[2].key) or "unknown" end
+        if not state.region then
+            state.region = ns.CurrentRegion()
+            if not state.region then
+                for _, reg in ipairs(ns.GetRegions()) do
+                    if reg.key then state.region = reg.key break end
+                end
+            end
+            state.region = state.region or "unknown"
+        end
         RenderSidebar()
         RenderHeader()
         if state.detail then ShowDetail(state.detail) else RenderGrid() end

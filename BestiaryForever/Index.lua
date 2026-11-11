@@ -200,7 +200,7 @@ local function Rebuild()
                 return ns.ZoneName(a) < ns.ZoneName(b)
             end)
             local c = ns.continentDB[cont.id]
-            regions[#regions + 1] = { header = ns.isSpanish and c.es or c.n }
+            regions[#regions + 1] = { header = ns.isSpanish and c.es or c.n, keys = zones }
             for _, z in ipairs(zones) do regions[#regions + 1] = { key = z } end
         end
     end
@@ -216,13 +216,21 @@ local function Rebuild()
             if la ~= lb then return la < lb end
             return ns.InstanceName(a) < ns.InstanceName(b)
         end)
-        regions[#regions + 1] = { header = L.DUNGEONS }
-        for _, id in ipairs(insts) do regions[#regions + 1] = { key = "i" .. id } end
+        local keys = {}
+        for i, id in ipairs(insts) do keys[i] = "i" .. id end
+        regions[#regions + 1] = { header = L.DUNGEONS, keys = keys }
+        for _, key in ipairs(keys) do regions[#regions + 1] = { key = key } end
     end
     if zoneIndex.unknown then
-        regions[#regions + 1] = { header = L.OTHER }
+        regions[#regions + 1] = { header = L.OTHER, keys = { "unknown" } }
         regions[#regions + 1] = { key = "unknown" }
     end
+    -- Progreso total al principio de la barra lateral: todas las regiones
+    local all = {}
+    for _, reg in ipairs(regions) do
+        if reg.key then all[#all + 1] = reg.key end
+    end
+    table.insert(regions, 1, { header = L.TOTAL, keys = all, total = true })
     dirty = false
 end
 
@@ -264,6 +272,27 @@ function ns.RegionStats(key)
         end
     end
     return s
+end
+
+-- Progreso de un grupo de regiones (un continente, las mazmorras o todo): criaturas únicas, sin contar dos veces
+-- las que viven en varias zonas.
+function ns.GroupStats(keys)
+    local seen, total, discovered = {}, 0, 0
+    for _, key in ipairs(keys or {}) do
+        for _, npc in ipairs(ns.GetRegionCreatures(key)) do
+            if not seen[npc] then
+                seen[npc] = true
+                total = total + 1
+                if BestiaryForeverDB.creatures[npc] then discovered = discovered + 1 end
+            end
+        end
+    end
+    return discovered, total
+end
+
+function ns.Percent(discovered, total)
+    if not total or total == 0 then return 0 end
+    return math.floor(discovered / total * 100)
 end
 
 -- Región por defecto al abrir el bestiario: la zona o mazmorra donde está el jugador.

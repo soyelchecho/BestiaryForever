@@ -40,6 +40,7 @@ local en = {
     UNKNOWN = "Unknown",
     -- Bestiario por zonas
     DUNGEONS = "Dungeons & raids",
+    TOTAL = "Whole bestiary",
     OTHER = "Other",
     UNKNOWN_ZONE = "Unknown zone",
     DISCOVERED_SHORT = "Discovered",
@@ -103,6 +104,7 @@ local es = {
     OPEN_IN_BESTIARY = "Abrir en el bestiario",
     UNKNOWN = "Desconocido",
     DUNGEONS = "Mazmorras y bandas",
+    TOTAL = "Todo el bestiario",
     OTHER = "Otros",
     UNKNOWN_ZONE = "Zona desconocida",
     DISCOVERED_SHORT = "Descubiertos",
