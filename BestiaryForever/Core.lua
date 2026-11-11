@@ -4,7 +4,8 @@
 local ADDON, ns = ...
 local L = ns.L
 
-ns.ICON = "Interface\\AddOns\\" .. ADDON .. "\\Media\\Icon"
+ns.ICON = "Interface\\AddOns\\" .. ADDON .. "\\Media\\Icon"   -- logo con marco (lista de addons, título del bestiario)
+ns.MARK = "Interface\\AddOns\\" .. ADDON .. "\\Media\\Mark"   -- silueta con contorno, legible a 16 px (botones)
 ns.VERSION = (C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(ADDON, "Version")) or "0.1.0"
 
 local isSecret = issecretvalue or function() return false end
