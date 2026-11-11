@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bestiary Forever - WoW Forever addon</title>
+<meta name="description" content="Free, open-source WoW Forever addon: target a creature to see its level, health and the loot it can drop, with drop rates from ForeverDB.net and your own kills. Keeps a bestiary of every creature you meet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0d12; --panel: #14161e; --panel-2: #1b1e29; --line: #2a2e3d;
+    --text: #e7e4dc; --muted: #9a9cab; --gold: #e2b65b;
+    --green: #66ff66; --blue: #5abfff; --orange: #ffa640; --yellow: #ffe55a; --grey: #a6a6a6;
+    --q-uncommon: #1eff00; --q-common: #ffffff; --q-poor: #9d9d9d;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; }
+  a { color: var(--gold); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
+  .brand { font-family: Cinzel, serif; font-weight: 700; letter-spacing: .04em; color: var(--gold); text-decoration: none; font-size: 18px; }
+  .lang { display: flex; gap: 4px; }
+  .lang button { background: transparent; border: 1px solid var(--line); color: var(--muted); padding: 4px 10px; border-radius: 6px; cursor: pointer; font: inherit; font-size: 13px; }
+  .lang button[aria-pressed="true"] { color: var(--bg); background: var(--gold); border-color: var(--gold); }
+
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding: 48px 0 64px; }
+  h1 { font-family: Cinzel, serif; font-size: clamp(34px, 5vw, 54px); line-height: 1.1; margin: 0 0 16px; }
+  h1 span { color: var(--gold); }
+  .lede { color: var(--muted); font-size: 18px; margin: 0 0 28px; max-width: 34em; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-block; padding: 11px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; }
+  .btn.primary { background: var(--gold); color: #17130a; }
+  .btn.ghost { border: 1px solid var(--line); color: var(--text); }
+  .badge { font-size: 13px; color: var(--muted); }
+  .badge b { color: var(--text); font-weight: 600; }
+
+  /* Ilustración del marco del objetivo (HTML/CSS, no es una captura del juego) */
+  .mock { justify-self: center; width: 100%; max-width: 330px; }
+  .tf { background: rgba(8,8,13,.82); padding: 6px; font-size: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .tf .row1 { display: flex; gap: 8px; }
+  .portrait { width: 64px; height: 64px; flex: none; background: radial-gradient(circle at 50% 40%, #6b4a2e, #20150d 70%); position: relative; overflow: hidden; }
+  .portrait::after { content: ""; position: absolute; inset: 14px 16px 6px; border-radius: 40% 40% 20% 20%; background: linear-gradient(#b08158, #5c3b22); }
+  .tf .meta { flex: 1; min-width: 0; }
+  .tf .nm { color: #ff4040; font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; }
+  .tf .nm i { font-style: normal; color: var(--muted); border: 1px solid var(--line); width: 16px; height: 16px; line-height: 14px; text-align: center; font-size: 12px; }
+  .tf .inf { color: #ddd; margin: 1px 0 6px; }
+  .tf .inf .lv { color: #ffff00; }
+  .bar { height: 14px; background: #000; position: relative; }
+  .bar span { position: absolute; inset: 0 32% 0 0; background: linear-gradient(#e33, #a11); }
+  .bar em { position: absolute; inset: 0; text-align: center; font-style: normal; font-size: 10px; line-height: 14px; color: #fff; text-shadow: 0 0 2px #000; }
+  .icons { display: flex; gap: 6px; margin: 10px 2px 2px; }
+  .ic { width: 28px; text-align: center; }
+  .ic div { width: 26px; height: 26px; border: 1px solid; margin: 0 auto 1px; }
+  .ic small { font-size: 9px; font-weight: 600; }
+  .exp { background: rgba(8,8,13,.9); margin-top: 2px; padding: 8px; font-size: 12px; }
+  .exp h4 { margin: 0 0 6px; color: var(--gold); font-size: 13px; font-weight: 600; }
+  .exp h4 small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .li { display: grid; grid-template-columns: 16px 1fr auto 34px; gap: 6px; align-items: center; padding: 2px 0; }
+  .li i { width: 14px; height: 14px; display: block; border: 1px solid var(--line); }
+  .li .t { color: var(--muted); font-size: 11px; }
+  .li b { text-align: right; font-weight: 600; }
+  .credit { color: var(--muted); font-size: 10px; margin-top: 6px; }
+  .caption { color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-family: Cinzel, serif; font-size: 28px; margin: 0 0 24px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .card h3 { margin: 0 0 8px; font-size: 17px; color: var(--gold); }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { white-space: nowrap; font-weight: 600; }
+  code { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; font-size: 14px; overflow-wrap: anywhere; }
+  ol { padding-left: 20px; } ol li { margin: 6px 0; }
+  .note { color: var(--muted); font-size: 14px; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
+  [data-l="es"] { display: none; }
+  html[lang="es"] [data-l="en"] { display: none; }
+  html[lang="es"] [data-l="es"] { display: revert; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 24px; }
+    .grid3 { grid-template-columns: 1fr; }
+    td:first-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#">Bestiary Forever</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="en" aria-pressed="true">EN</button>
+      <button type="button" data-set="es" aria-pressed="false">ES</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1 data-l="en">Know what it drops <span>before</span> you pull.</h1>
+      <h1 data-l="es">Sabe qué suelta <span>antes</span> de atacar.</h1>
+      <p class="lede" data-l="en">A free bestiary addon for World of Warcraft: Forever. Target a creature and a small borderless window shows its level, health and the loot it can drop, with drop rates from ForeverDB.net and from your own kills.</p>
+      <p class="lede" data-l="es">Un addon bestiario gratuito para World of Warcraft: Forever. Selecciona una criatura y una ventana pequeña sin bordes te muestra su nivel, su vida y el botín que puede soltar, con porcentajes de ForeverDB.net y de tus propias muertes.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/soyelchecho/BestiaryForever/releases/latest"><span data-l="en">Download</span><span data-l="es">Descargar</span></a>
+        <a class="btn ghost" href="https://github.com/soyelchecho/BestiaryForever">GitHub</a>
+        <span class="badge"><b>v0.1.0 beta</b> · Interface 16001 · GPL-3.0</span>
+      </div>
+    </div>
+
+    <div class="mock" aria-label="Illustration of the target frame">
+      <div class="tf">
+        <div class="row1">
+          <div class="portrait"></div>
+          <div class="meta">
+            <div class="nm">Defias Thug <i>−</i></div>
+            <div class="inf"><span class="lv">Level 4</span> · Humanoid</div>
+            <div class="bar"><span></span><em>68 / 100 (68%)</em></div>
+          </div>
+        </div>
+        <div class="icons">
+          <div class="ic"><div style="border-color:var(--q-common);background:#7b2525"></div><small style="color:var(--blue)">71%</small></div>
+          <div class="ic"><div style="border-color:var(--q-common);background:#cfc6a8"></div><small style="color:var(--yellow)">40%</small></div>
+          <div class="ic"><div style="border-color:var(--q-uncommon);background:#4f5b3c"></div><small style="color:var(--orange)">2%</small></div>
+          <div class="ic"><div style="border-color:var(--q-common);background:#c79a5a"></div><small></small></div>
+          <div class="ic"><div style="border-color:var(--q-common);background:#6aa0c8"></div><small></small></div>
+          <div class="ic"><div style="border-color:var(--q-poor);background:#5a4a3a"></div><small></small></div>
+        </div>
+      </div>
+      <div class="exp">
+        <h4><span data-l="en">Loot</span><span data-l="es">Botín</span> <small data-l="en">Looted kills: 5</small><small data-l="es">Cadáveres saqueados: 5</small></h4>
+        <div class="li"><i style="background:#7b2525"></i><span>Red Burlap Bandana</span><span class="t">Forever</span><b style="color:var(--blue)">71%</b></div>
+        <div class="li"><i style="background:#cfc6a8"></i><span>Linen Cloth</span><span class="t"><span data-l="en">You (5)</span><span data-l="es">Tú (5)</span></span><b style="color:var(--yellow)">40%</b></div>
+        <div class="li"><i style="background:#4f5b3c"></i><span style="color:var(--q-uncommon)">Pattern: Red Linen Robe</span><span class="t">Classic*</span><b style="color:var(--orange)">2%</b></div>
+        <div class="li"><i style="background:#c79a5a"></i><span>Darnassian Bleu</span><span class="t"><span data-l="en">seen 85</span><span data-l="es">visto 85</span></span><b style="color:var(--grey)">-</b></div>
+        <div class="credit">Data: ForeverDB.net - https://foreverdb.net</div>
+      </div>
+      <p class="caption" data-l="en">Illustration of the target frame and its expanded view.</p>
+      <p class="caption" data-l="es">Ilustración de la ventana del objetivo y su vista expandida.</p>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 data-l="en">What it does</h2>
+    <h2 data-l="es">Qué hace</h2>
+    <div class="grid3">
+      <div class="card">
+        <h3 data-l="en">Target frame</h3><h3 data-l="es">Ventana del objetivo</h3>
+        <p data-l="en">3D portrait, name, level, elite/rare/boss, creature type and a live health bar, plus the top drops with their rates. Borderless, movable, out of your way.</p>
+        <p data-l="es">Retrato 3D, nombre, nivel, élite/raro/jefe, tipo de criatura y barra de vida en tiempo real, más los drops principales con su porcentaje. Sin bordes, movible y discreta.</p>
+      </div>
+      <div class="card">
+        <h3 data-l="en">Expanded loot</h3><h3 data-l="es">Botín expandido</h3>
+        <p data-l="en">Click + for a rotatable 3D model and the full loot table. Hover any item to see every source side by side; shift-click to link it in chat.</p>
+        <p data-l="es">Pulsa + para ver un modelo 3D que puedes girar y la tabla de botín completa. Pasa el ratón por un ítem para ver todas las fuentes; mayús+clic para enlazarlo en el chat.</p>
+      </div>
+      <div class="card">
+        <h3 data-l="en">Your bestiary</h3><h3 data-l="es">Tu bestiario</h3>
+        <p data-l="en">Every creature you meet is saved: levels seen, zone, times met, looted kills, gold looted, first and last seen. Search it with <code>/bf</code>.</p>
+        <p data-l="es">Cada criatura que encuentras queda guardada: niveles vistos, zona, veces vista, cadáveres saqueados, oro, primera y última vez. Búscala con <code>/bf</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-l="en">Drop rates with their source</h2>
+    <h2 data-l="es">Porcentajes con su fuente</h2>
+    <p class="note" data-l="en">Each item shows a best estimate and says where it comes from. The addon records every corpse you loot (once per corpse) and merges your rates with ForeverDB's.</p>
+    <p class="note" data-l="es">Cada ítem muestra una estimación y dice de dónde sale. El addon registra cada cadáver que saqueas (una vez por cadáver) y combina tus porcentajes con los de ForeverDB.</p>
+    <table>
+      <tr><td style="color:var(--green)">You / Tú</td><td><span data-l="en">Your own rate, once you have looted 20+ corpses of that creature (<code>/bf minkills</code> to change it).</span><span data-l="es">Tu propio porcentaje, a partir de 20 cadáveres saqueados de esa criatura (se cambia con <code>/bf minkills</code>).</span></td></tr>
+      <tr><td style="color:var(--blue)">Forever</td><td><span data-l="en">Rate measured in WoW Forever by ForeverDB.</span><span data-l="es">Porcentaje medido en WoW Forever por ForeverDB.</span></td></tr>
+      <tr><td style="color:var(--orange)">Classic*</td><td><span data-l="en">Classic rate (CMaNGOS classic-db) used until a Forever one exists. It may differ in Forever.</span><span data-l="es">Porcentaje de Classic (CMaNGOS classic-db) mientras no haya uno de Forever. Puede variar en Forever.</span></td></tr>
+      <tr><td style="color:var(--yellow)">You (n) / Tú (n)</td><td><span data-l="en">Your own rate with few samples (n looted corpses).</span><span data-l="es">Tu porcentaje con pocas muestras (n cadáveres saqueados).</span></td></tr>
+      <tr><td style="color:var(--grey)">seen N / visto N</td><td><span data-l="en">No rate yet: how many times ForeverDB players saw it drop.</span><span data-l="es">Aún sin porcentaje: cuántas veces lo vieron caer jugadores de ForeverDB.</span></td></tr>
+    </table>
+    <p class="note" data-l="en">Current data: 3,161 creatures and 22,852 drops.</p>
+    <p class="note" data-l="es">Datos actuales: 3.161 criaturas y 22.852 drops.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-l="en">Install</h2>
+    <h2 data-l="es">Instalación</h2>
+    <ol data-l="en">
+      <li>Download <code>BestiaryForever-0.1.0.zip</code> from <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
+      <li>Extract the <code>BestiaryForever</code> folder into <code>World of Warcraft\_forever_\Interface\AddOns\</code>.</li>
+      <li>Restart the game or type <code>/reload</code>. Open the bestiary with <code>/bf</code>, or from the addon compartment next to the minimap.</li>
+    </ol>
+    <ol data-l="es">
+      <li>Descarga <code>BestiaryForever-0.1.0.zip</code> desde <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
+      <li>Extrae la carpeta <code>BestiaryForever</code> en <code>World of Warcraft\_forever_\Interface\AddOns\</code>.</li>
+      <li>Reinicia el juego o escribe <code>/reload</code>. Abre el bestiario con <code>/bf</code> o desde el compartimento de addons junto al minimapa.</li>
+    </ol>
+    <p class="note"><code>/bf frame</code> · <code>/bf lock</code> · <code>/bf reset</code> · <code>/bf minkills &lt;n&gt;</code> · <code>/bf about</code></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong><a href="https://foreverdb.net">Data from ForeverDB.net</a></strong><span data-l="en">: creature loot data. Part of the rates are Classic data from CMaNGOS classic-db (GPL-3.0).</span><span data-l="es">: datos de botín de las criaturas. Parte de los porcentajes son datos de Classic de CMaNGOS classic-db (GPL-3.0).</span></p>
+    <p data-l="en">Bestiary Forever is free software under the <a href="https://github.com/soyelchecho/BestiaryForever/blob/main/LICENSE">GPL-3.0</a>. Not affiliated with Blizzard Entertainment or ForeverDB.net. World of Warcraft is a trademark of Blizzard Entertainment, Inc.</p>
+    <p data-l="es">Bestiary Forever es software libre bajo la <a href="https://github.com/soyelchecho/BestiaryForever/blob/main/LICENSE">GPL-3.0</a>. No está afiliado a Blizzard Entertainment ni a ForeverDB.net. World of Warcraft es una marca de Blizzard Entertainment, Inc.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    function set(lang) {
+      root.lang = lang;
+      document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === lang)); });
+      try { localStorage.setItem('bf-lang', lang); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem('bf-lang'); } catch (e) {}
+    set(saved || ((navigator.language || '').slice(0, 2) === 'es' ? 'es' : 'en'));
+    document.querySelectorAll('.lang button').forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.set); }); });
+  })();
+</script>
+</body>
+</html>

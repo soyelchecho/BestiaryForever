@@ -1,0 +1,9 @@
+# Caché de descargas del generador de datos (se regenera con tools/build_bestiary_data.py --refresh)
+data/raw/
+# Paquetes generados
+dist/
+__pycache__/
+*.pyc
+.impeccable/
+.DS_Store
+Thumbs.db
