@@ -7,7 +7,7 @@
 <meta name="description" content="Free, open-source WoW Forever addon: target a creature to see its level, health and the loot it can drop, with drop rates from ForeverDB.net and your own kills. Keeps a bestiary of every creature you meet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0c0d12; --panel: #14161e; --panel-2: #1b1e29; --line: #2a2e3d;
@@ -17,7 +17,7 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 "Alegreya Sans", system-ui, sans-serif; }
   a { color: var(--gold); }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
   header.top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
@@ -39,7 +39,7 @@
 
   /* Ilustración del marco del objetivo (HTML/CSS, no es una captura del juego) */
   .mock { justify-self: center; width: 100%; max-width: 330px; }
-  .tf { background: rgba(8,8,13,.82); padding: 6px; font-size: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .tf { background: rgba(8,8,13,.82); padding: 10px; font-size: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
   .tf .row1 { display: flex; gap: 8px; }
   .portrait { width: 64px; height: 64px; flex: none; background: radial-gradient(circle at 50% 40%, #6b4a2e, #20150d 70%); position: relative; overflow: hidden; }
   .portrait::after { content: ""; position: absolute; inset: 14px 16px 6px; border-radius: 40% 40% 20% 20%; background: linear-gradient(#b08158, #5c3b22); }
@@ -55,9 +55,9 @@
   .ic { width: 28px; text-align: center; }
   .ic div { width: 26px; height: 26px; border: 1px solid; margin: 0 auto 1px; }
   .ic small { font-size: 9px; font-weight: 600; }
-  .exp { background: rgba(8,8,13,.9); margin-top: 2px; padding: 8px; font-size: 12px; }
-  .exp h4 { margin: 0 0 6px; color: var(--gold); font-size: 13px; font-weight: 600; }
-  .exp h4 small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .exp { background: rgba(8,8,13,.9); margin-top: 2px; padding: 12px; font-size: 12px; }
+  .exp .exp-title { margin: 0 0 6px; color: var(--gold); font-size: 13px; font-weight: 600; }
+  .exp .exp-title small { color: var(--muted); font-weight: 400; margin-left: 6px; }
   .li { display: grid; grid-template-columns: 16px 1fr auto 34px; gap: 6px; align-items: center; padding: 2px 0; }
   .li i { width: 14px; height: 14px; display: block; border: 1px solid var(--line); }
   .li .t { color: var(--muted); font-size: 11px; }
@@ -132,7 +132,7 @@
         </div>
       </div>
       <div class="exp">
-        <h4><span data-l="en">Loot</span><span data-l="es">Botín</span> <small data-l="en">Looted kills: 5</small><small data-l="es">Cadáveres saqueados: 5</small></h4>
+        <div class="exp-title"><span data-l="en">Loot</span><span data-l="es">Botín</span> <small data-l="en">Looted kills: 5</small><small data-l="es">Cadáveres saqueados: 5</small></div>
         <div class="li"><i style="background:#7b2525"></i><span>Red Burlap Bandana</span><span class="t">Forever</span><b style="color:var(--blue)">71%</b></div>
         <div class="li"><i style="background:#cfc6a8"></i><span>Linen Cloth</span><span class="t"><span data-l="en">You (5)</span><span data-l="es">Tú (5)</span></span><b style="color:var(--yellow)">40%</b></div>
         <div class="li"><i style="background:#4f5b3c"></i><span style="color:var(--q-uncommon)">Pattern: Red Linen Robe</span><span class="t">Classic*</span><b style="color:var(--orange)">2%</b></div>
