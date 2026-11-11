@@ -210,6 +210,7 @@ function RenderHeader()
     local lv = ns.RegionLevels(state.region)
     h.levels:SetText(lv and L.LEVEL:format(lv) or "")
     h.counter:SetText(("%d / %d"):format(s.discovered, s.total))
+    h.mapBtn:SetShown(ns.RegionMap(state.region) ~= nil)
     h.stats[1].value:SetText(s.looted)
     h.stats[2].value:SetText(("%d/%d"):format(s.rares, s.raresTotal))
     h.stats[3].value:SetText(("%d/%d"):format(s.elites, s.elitesTotal))
@@ -299,6 +300,9 @@ function ShowDetail(npc)
     d.model.facing = 0
     d.model:SetFacing(0)
 
+    local zoneList = ns.CreatureZones(npc)
+    d.mapBtn.map = zoneList[1] and zoneList[1].map
+    d.mapBtn:SetShown(d.mapBtn.map ~= nil)
     local zones = table.concat(ns.CreatureZoneNames(npc), ", ")
     if discovered then
         local c = BestiaryForeverDB.creatures[npc]
@@ -358,7 +362,7 @@ local function BuildBestiaryPage(page)
     Background(h, 0.12, 0.13, 0.18, 0.95)
     h.title = Font(h, "GameFontNormalLarge")
     h.title:SetPoint("TOPLEFT", 12, -10)
-    h.title:SetPoint("RIGHT", h, "RIGHT", -150, 0)
+    h.title:SetPoint("RIGHT", h, "RIGHT", -270, 0)
     h.levels = Font(h, "GameFontDisableSmall")
     h.levels:SetPoint("TOPLEFT", h.title, "BOTTOMLEFT", 0, -2)
     local pill = CreateFrame("Frame", nil, h)
@@ -368,6 +372,11 @@ local function BuildBestiaryPage(page)
     h.counter = Font(pill, "GameFontHighlightLarge", "CENTER")
     h.counter:SetPoint("CENTER")
     h.counter:SetTextColor(0.08, 0.06, 0.02)
+    h.mapBtn = CreateFrame("Button", nil, h, "UIPanelButtonTemplate")
+    h.mapBtn:SetSize(112, 22)
+    h.mapBtn:SetPoint("RIGHT", pill, "LEFT", -8, 0)
+    h.mapBtn:SetText(L.OPEN_MAP)
+    h.mapBtn:SetScript("OnClick", function() ns.OpenMap(ns.RegionMap(state.region)) end)
     h.stats = {}
     local labels = { L.LOOTED_SHORT, L.RARES_SHORT, L.ELITES_SHORT, L.BOSSES_SHORT }
     local statW = (MAIN_W - 24) / #labels
@@ -424,6 +433,11 @@ local function BuildBestiaryPage(page)
     d.model:SetSize(230, 300)
     d.model:SetPoint("TOPLEFT", 8, -40)
     MakeRotatable(d.model)
+    d.mapBtn = CreateFrame("Button", nil, d, "UIPanelButtonTemplate")
+    d.mapBtn:SetSize(230, 22)
+    d.mapBtn:SetPoint("TOPLEFT", d.model, "BOTTOMLEFT", 0, -6)
+    d.mapBtn:SetText(L.OPEN_MAP)
+    d.mapBtn:SetScript("OnClick", function(self) ns.OpenMap(self.map) end)
     local mbg = d:CreateTexture(nil, "BORDER")
     mbg:SetAllPoints(d.model)
     mbg:SetColorTexture(0, 0, 0, 0.45)
@@ -515,14 +529,15 @@ local function DropperRows(item)
         for _, r in ipairs(merged) do
             if r.item == item then found = r break end
         end
-        local zones = ns.CreatureZoneNames(npc)
+        local zones = ns.CreatureZones(npc)
+        local zone = zones[1]
         local name = ns.CreatureName(npc)
         rows[#rows + 1] = {
             npc = npc, r = found, kills = kills, pct = found and found.pct,
-            name = name, zone = zones[1] or L.UNKNOWN_ZONE,
+            name = name, zone = zone and zone.name or L.UNKNOWN_ZONE, zoneMap = zone and zone.map,
             -- criaturas sin nombre conocido ("#123") y sin zona, al final de su orden
             sortName = (name:sub(1, 1) == "#" and "\255" or "") .. name:lower(),
-            sortZone = (zones[1] and "" or "\255") .. (zones[1] or ""):lower(),
+            sortZone = (zone and "" or "\255") .. (zone and zone.name or ""):lower(),
             discovered = ns.IsDiscovered(npc),
         }
     end
@@ -574,12 +589,28 @@ function RenderDroppers()
             row.tag = Font(row, "GameFontDisableSmall", "RIGHT")
             row.tag:SetPoint("RIGHT", row.pct, "LEFT", -4, 0)
             row.tag:SetWidth(62)
-            row.zone = Font(row, "GameFontDisableSmall")
-            row.zone:SetPoint("RIGHT", row.tag, "LEFT", -6, 0)
-            row.zone:SetWidth(140)
+            -- Zona: botón que abre el mapa del mundo en esa zona
+            row.zoneBtn = CreateFrame("Button", nil, row)
+            row.zoneBtn:SetSize(140, 18)
+            row.zoneBtn:SetPoint("RIGHT", row.tag, "LEFT", -6, 0)
+            row.zone = Font(row.zoneBtn, "GameFontDisableSmall")
+            row.zone:SetAllPoints()
+            row.zoneBtn:SetScript("OnClick", function() ns.OpenMap(row.data and row.data.zoneMap) end)
+            row.zoneBtn:SetScript("OnEnter", function(self)
+                local data = row.data
+                if not (data and data.zoneMap) then return end
+                row.zone:SetTextColor(1, 0.82, 0)
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                GameTooltip:SetText(L.OPEN_MAP_TT:format(data.zone))
+                GameTooltip:Show()
+            end)
+            row.zoneBtn:SetScript("OnLeave", function()
+                if row.zoneColor then row.zone:SetTextColor(unpack(row.zoneColor)) end
+                GameTooltip:Hide()
+            end)
             row.name = Font(row, "GameFontHighlightSmall")
             row.name:SetPoint("LEFT", 4, 0)
-            row.name:SetPoint("RIGHT", row.zone, "LEFT", -6, 0)
+            row.name:SetPoint("RIGHT", row.zoneBtn, "LEFT", -6, 0)
             row:SetScript("OnClick", function(self) ns.OpenBestiaryAt(self.npc) end)
             row:SetScript("OnEnter", function(self)
                 if self.data.r then ns.ShowLootTooltip(self, self.data.r, self.data.kills) end
@@ -596,6 +627,10 @@ function RenderDroppers()
             row.name:SetTextColor(0.6, 0.6, 0.65)
         end
         row.zone:SetText(data.zone)
+        -- las zonas que abren el mapa, más claras; al pasar el ratón, doradas
+        row.zoneColor = data.zoneMap and { 0.72, 0.74, 0.82 } or { 0.45, 0.45, 0.5 }
+        row.zone:SetTextColor(unpack(row.zoneColor))
+        row.zoneBtn:EnableMouse(data.zoneMap ~= nil)
         local r = data.r
         local c = ns.TIER_COLORS[r and r.tier or "seen"] or ns.TIER_COLORS.seen
         row.pct:SetText(data.pct and (ns.FormatPct(data.pct) .. "%") or "-")
@@ -799,3 +834,35 @@ function ns.OnBestiaryChanged()
         RenderGrid()
     end
 end
+
+-- Busca un ítem en la pestaña Objetos y lo selecciona.
+function ns.SearchItemInBestiary(item)
+    if not frame then Build() end
+    if not frame:IsShown() then frame:Show() end
+    if state.tab ~= "items" then SetTab("items") end
+    state.item = item
+    frame.itemsPage.search:SetText(ns.ItemDisplayName(item))
+    frame.itemsPage.search:ClearFocus()
+    RenderItemResults()
+    RenderDroppers()
+end
+
+---------------------------------------------------------------------------------------------- mayús+clic en un ítem
+
+-- Con la pestaña Objetos abierta, mayús+clic en cualquier ítem del juego (bolsas, chat, personaje, botín...) lo busca.
+-- Se engancha después de las funciones del juego (hooksecurefunc): no cambia lo que hacen, solo se entera del clic.
+local lastLink = { id = nil, t = 0 }
+local function OnItemLinkClicked(link)
+    if not (frame and frame:IsShown() and state.tab == "items") then return end
+    if not IsShiftKeyDown() then return end
+    local item = type(link) == "string" and tonumber(link:match("item:(%d+)"))
+    if not item then return end
+    local now = GetTime()
+    if lastLink.id == item and now - lastLink.t < 0.3 then return end -- un mismo clic puede llegar por dos ganchos
+    lastLink.id, lastLink.t = item, now
+    ns.SearchItemInBestiary(item)
+end
+
+if HandleModifiedItemClick then hooksecurefunc("HandleModifiedItemClick", OnItemLinkClicked) end
+if ChatEdit_InsertLink then hooksecurefunc("ChatEdit_InsertLink", OnItemLinkClicked) end
+if ChatFrameUtil and ChatFrameUtil.InsertLink then hooksecurefunc(ChatFrameUtil, "InsertLink", OnItemLinkClicked) end

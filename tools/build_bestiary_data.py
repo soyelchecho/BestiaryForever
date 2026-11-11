@@ -306,6 +306,8 @@ def write_lua(creatures, zones, continents, instances, version) -> None:
         parts = [f"n={lua_str(d['n'])}", f"es={lua_str(d['es'])}", f"kind={lua_str(d['kind'])}"]
         if d.get("lv"):
             parts.append(f"lv={lua_str(d['lv'])}")
+        if d.get("zone"):
+            parts.append(f"zone={d['zone']}")
         out.append(f"[{iid}]={{{','.join(parts)}}},")
     out.append("}")
     out.append("ns.creatureDB = {")
@@ -387,12 +389,14 @@ def main() -> None:
         elif kind == "d":
             dungeon_es[row[2]] = row[3] or row[4] or row[2]
 
+    zone_by_name = {z["n"]: z["m"] for z in zones_json["zones"] if z.get("type") == 3}
     instances = {}
     for d in dungeons_json:
         lo_hi = d.get("range") or []
         instances[int(d["id"])] = {
             "n": d["n"], "es": dungeon_es.get(d["n"], d["n"]), "kind": d.get("kind", "dungeon"),
             "lv": f"{lo_hi[0]}-{lo_hi[1]}" if len(lo_hi) == 2 else None,
+            "zone": zone_by_name.get(d.get("zone") or ""),  # zona donde está la entrada (UiMap)
         }
 
     locator = ZoneLocator(zones_json, index_json)

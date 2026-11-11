@@ -90,17 +90,51 @@ function ns.PrimaryRegion(npc)
     return "unknown"
 end
 
-function ns.CreatureZoneNames(npc)
-    local e, names = ns.creatureDB[npc], {}
+-- Zonas de una criatura: { {name = "Bosque de Elwynn", map = 1429}, ... }. Para una mazmorra, `map` es la zona
+-- donde está su entrada (para abrir el mapa del mundo ahí).
+function ns.CreatureZones(npc)
+    local e, zones = ns.creatureDB[npc], {}
     if e and e.z then
-        for z in e.z:gmatch("%d+") do names[#names + 1] = ns.ZoneName(tonumber(z)) end
+        for z in e.z:gmatch("%d+") do
+            z = tonumber(z)
+            zones[#zones + 1] = { name = ns.ZoneName(z), map = z }
+        end
     end
-    if e and e.inst and ns.instanceDB[e.inst] then names[#names + 1] = ns.InstanceName(e.inst) end
-    if #names == 0 then
+    if e and e.inst and ns.instanceDB[e.inst] then
+        zones[#zones + 1] = { name = ns.InstanceName(e.inst), map = ns.instanceDB[e.inst].zone }
+    end
+    if #zones == 0 then
         local c = BestiaryForeverDB.creatures[npc]
-        if c and c.zone then names[1] = c.zone end
+        if c and c.zone then zones[1] = { name = c.zone, map = c.mapID } end
     end
+    return zones
+end
+
+function ns.CreatureZoneNames(npc)
+    local names = {}
+    for i, z in ipairs(ns.CreatureZones(npc)) do names[i] = z.name end
     return names
+end
+
+-- Mapa (UiMap) que se abre para una región del bestiario: la zona, o la entrada de la mazmorra.
+function ns.RegionMap(key)
+    if type(key) == "number" then return key end
+    local inst = tonumber(tostring(key):match("^i(%d+)$"))
+    return inst and ns.instanceDB[inst] and ns.instanceDB[inst].zone
+end
+
+-- Abre el mapa del mundo en una zona. En combate el juego no deja abrirlo desde un addon.
+function ns.OpenMap(mapID)
+    if not mapID then return end
+    if InCombatLockdown and InCombatLockdown() then
+        ns.Print(L.MAP_COMBAT)
+        return
+    end
+    if OpenWorldMap and pcall(OpenWorldMap, mapID) then return end
+    if WorldMapFrame then
+        if not WorldMapFrame:IsShown() then ShowUIPanel(WorldMapFrame) end
+        pcall(WorldMapFrame.SetMapID, WorldMapFrame, mapID)
+    end
 end
 
 local function Rebuild()

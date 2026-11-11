@@ -7,7 +7,7 @@ Target a creature and a small borderless window shows its 3D portrait, level, he
 
 **Loot data from [ForeverDB.net](https://foreverdb.net).**
 
-> **Status: beta (v0.2.2).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
+> **Status: beta (v0.2.3).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
 
 *[Leer en español](#español)*
 
@@ -20,6 +20,8 @@ Target a creature and a small borderless window shows its 3D portrait, level, he
   - Every creature of the zone has its number (`#001`, ordered by level). **Creatures you haven't discovered appear as a black silhouette** with `???`: you can see that something is there and its shape, but not what it is.
   - Click one for its full page: rotatable 3D model, level, rank, type, zones, times met, looted kills, gold, first and last seen, and its **whole loot list**.
 - **Item search (reverse lookup)**: the *Items* tab finds any item by name (English or Spanish) and lists every creature that drops it. Sort by **highest drop %** (default), **A-Z** or **zone**; click a creature to open it in the bestiary.
+  - With the tab open, **shift-click any item** in the game (bags, chat, character sheet, loot) to search for it.
+- **Show on map**: click a creature's zone in the item search, or use the *Show on map* button on a zone or creature page, to open the world map there (for dungeons, the zone of the entrance).
 - **Your own drop rates**: every corpse you loot is recorded once, and each item counts once per corpse. Your rates are merged with the database ones.
 
 ## Where the drop rates come from
