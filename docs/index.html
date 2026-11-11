@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bestiary Forever - WoW Forever addon</title>
 <meta name="description" content="Free, open-source WoW Forever addon: target a creature to see its level, health and the loot it can drop, with drop rates from ForeverDB.net and your own kills. Keeps a bestiary of every creature you meet.">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:title" content="Bestiary Forever - WoW Forever addon">
+<meta property="og:description" content="Target a creature to see its level, health and loot. A Pokédex-style bestiary with silhouettes of the creatures you haven't found yet.">
+<meta property="og:image" content="https://soyelchecho.github.io/BestiaryForever/logo.png">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -21,7 +26,8 @@
   a { color: var(--gold); }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
   header.top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
-  .brand { font-family: Cinzel, serif; font-weight: 700; letter-spacing: .04em; color: var(--gold); text-decoration: none; font-size: 18px; }
+  .brand { font-family: Cinzel, serif; font-weight: 700; letter-spacing: .04em; color: var(--gold); text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 36px; height: 36px; display: block; }
   .lang { display: flex; gap: 4px; }
   .lang button { background: transparent; border: 1px solid var(--line); color: var(--muted); padding: 4px 10px; border-radius: 6px; cursor: pointer; font: inherit; font-size: 13px; }
   .lang button[aria-pressed="true"] { color: var(--bg); background: var(--gold); border-color: var(--gold); }
@@ -110,7 +116,7 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="#">Bestiary Forever</a>
+    <a class="brand" href="#"><img src="favicon.png" alt="" width="36" height="36">Bestiary Forever</a>
     <div class="lang" role="group" aria-label="Language">
       <button type="button" data-set="en" aria-pressed="true">EN</button>
       <button type="button" data-set="es" aria-pressed="false">ES</button>
@@ -126,7 +132,7 @@
       <div class="cta">
         <a class="btn primary" href="https://github.com/soyelchecho/BestiaryForever/releases/latest"><span data-l="en">Download</span><span data-l="es">Descargar</span></a>
         <a class="btn ghost" href="https://github.com/soyelchecho/BestiaryForever">GitHub</a>
-        <span class="badge"><b>v0.2.0 beta</b> · Interface 16001 · GPL-3.0</span>
+        <span class="badge"><b>v0.2.1 beta</b> · Interface 16001 · GPL-3.0</span>
       </div>
     </div>
 
@@ -240,12 +246,12 @@
     <h2 data-l="en">Install</h2>
     <h2 data-l="es">Instalación</h2>
     <ol data-l="en">
-      <li>Download <code>BestiaryForever-0.2.0.zip</code> from <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
+      <li>Download <code>BestiaryForever-0.2.1.zip</code> from <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
       <li>Extract the <code>BestiaryForever</code> folder into <code>World of Warcraft\_forever_\Interface\AddOns\</code>.</li>
       <li>Restart the game or type <code>/reload</code>. Open the bestiary with <code>/bf</code>, or from the addon compartment next to the minimap.</li>
     </ol>
     <ol data-l="es">
-      <li>Descarga <code>BestiaryForever-0.2.0.zip</code> desde <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
+      <li>Descarga <code>BestiaryForever-0.2.1.zip</code> desde <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
       <li>Extrae la carpeta <code>BestiaryForever</code> en <code>World of Warcraft\_forever_\Interface\AddOns\</code>.</li>
       <li>Reinicia el juego o escribe <code>/reload</code>. Abre el bestiario con <code>/bf</code> o desde el compartimento de addons junto al minimapa.</li>
     </ol>
