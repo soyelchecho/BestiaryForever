@@ -26,8 +26,8 @@ Todo lo que hay que pegar o subir está en esta carpeta. Crear el proyecto requi
 ## 2. Subir el archivo
 
 1. En el proyecto: **Files → Upload File**.
-2. Archivo: el zip de la última versión en `dist/` (por ejemplo `BestiaryForever-0.2.5.zip`).
-3. **Display name**: `Bestiary Forever 0.2.5`
+2. Archivo: el zip de la última versión en `dist/`: ahora `BestiaryForever-0.2.7.zip`.
+3. **Display name**: `Bestiary Forever 0.2.7`
 4. **Release type**: `Beta`
 5. **Game version**: marca la versión de **WoW Forever** (la que corresponde a la interfaz `16001`). Esto es lo que hace que aparezca en la sección *Forever* de la app de CurseForge.
 6. **Changelog**: pega las notas de la versión (están en el release de GitHub de esa versión).
@@ -36,15 +36,17 @@ Todo lo que hay que pegar o subir está en esta carpeta. Crear el proyecto requi
 
 Sube estas capturas en **Images**, en este orden:
 
-1. `docs/screenshots/zone-page.png`: página de zona del bestiario
-2. `docs/screenshots/silhouettes.png`: siluetas de criaturas sin descubrir
-3. `docs/screenshots/undiscovered-entry.png`: ficha de una criatura sin descubrir
+1. `docs/screenshots/bestiary.png`: el bestiario con las barras de progreso, la zona y las siluetas (será la imagen principal)
+2. `docs/screenshots/item-search.png`: la pestaña Objetos buscando "Gema de las Sombras" y las criaturas que la sueltan
+3. `docs/screenshots/target-window.png`: la ventana del objetivo con sus drops
 
-Faltan capturas que expliquen mejor el addon. Cuando las hagas, ponlas en `docs/screenshots/` y súbelas también:
+Capturas que conviene añadir o rehacer:
 
-- La **ventana del objetivo** con un monstruo seleccionado (y otra con **+** expandido).
+- **Rehacer la ventana del objetivo** con la versión 0.2.7: la actual es anterior y muestra el "0.02%" montado sobre los iconos.
+- La ventana del objetivo **expandida con +**.
 - La **ficha de una criatura descubierta** con su botín.
-- La **pestaña Objetos** con una búsqueda hecha (por ejemplo "paño de lino") y la lista de criaturas.
+
+Cuando las tengas, ponlas en `docs/screenshots/` y súbelas también a la galería.
 
 ## 4. Próximas versiones (opcional, automático)
 

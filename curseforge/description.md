@@ -23,6 +23,8 @@ Target any creature and a small window shows its level, health and the loot it c
 ## The parts
 
 ### 1. Target window
+![Target window](https://soyelchecho.github.io/BestiaryForever/screenshots/target-window.png)
+
 A small borderless window: 3D portrait, name, level, elite/rare/boss, type and health bar. Below it are the **top 8 drops** with their %. Hover an item to see where the % comes from.
 
 - **+** opens the **expanded view**: a big rotatable model and the full loot list.
@@ -30,17 +32,17 @@ A small borderless window: 3D portrait, name, level, elite/rare/boss, type and h
 - Drag it to move it. `/bf lock` locks it.
 
 ### 2. Bestiary book (`/bf`)
-![Zone page](https://soyelchecho.github.io/BestiaryForever/screenshots/zone-page.png)
+![Bestiary book](https://soyelchecho.github.io/BestiaryForever/screenshots/bestiary.png)
 
-- **Left**: continents, zones and dungeons, each with how many creatures you've discovered (`12/57`).
-- **Top**: the zone's counter, plus how many you've looted and the rares, elites and bosses you've found.
+- **Left**: your progress with bars and %: the whole bestiary, each continent, and each zone and dungeon (`10/102 · 9%`). Bars turn green when you complete a zone.
+- **Top**: the zone's progress bar and counter, plus how many you've looted and the rares, elites and bosses you've found.
 - **Grid**: every creature of the zone, numbered by level (`#001`). The ones you haven't found are **black silhouettes with `???`**. Target one once and it's yours.
 - **Click a creature** for its full page: rotatable model, level, rank, type, zones, times met, looted kills, gold, dates and its **whole loot list**.
 - **Show on map** opens the world map at the creature's zone (dungeons: at the entrance).
 
-![Silhouettes](https://soyelchecho.github.io/BestiaryForever/screenshots/silhouettes.png)
-
 ### 3. Item search (Items tab)
+![Item search](https://soyelchecho.github.io/BestiaryForever/screenshots/item-search.png)
+
 - Type an item name (**English or Spanish**) and pick it: you get **every creature that drops it**.
 - Sort by **Highest %** (default), **A-Z** or **Zone**.
 - **Shift-click any item** in the game (bags, chat, character sheet) while the tab is open to search for it.
@@ -88,6 +90,6 @@ Not affiliated with Blizzard Entertainment or ForeverDB.net.
 **Sabe qué suelta una criatura antes de atacarla y colecciona todas las criaturas de Azeroth como en una Pokédex.**
 
 - **Ventana del objetivo**: selecciona una criatura y verás su nivel, vida y botín con %. **+** la expande; el **botón del oso** la abre en el bestiario.
-- **Bestiario** (**`/bf`**): por continentes, zonas y mazmorras. Las criaturas que no has encontrado son **siluetas negras**. Pulsa una para ver su ficha y todo su botín, y **Ver en el mapa** para abrir su zona.
+- **Bestiario** (**`/bf`**): por continentes, zonas y mazmorras, con **barras de progreso y %** de todo el bestiario, cada continente y cada zona. Las criaturas que no has encontrado son **siluetas negras**. Pulsa una para ver su ficha y todo su botín, y **Ver en el mapa** para abrir su zona.
 - **Búsqueda de objetos** (pestaña **Objetos**): busca un objeto (en español o inglés) y ve qué criaturas lo sueltan, ordenadas por **mayor %**, **A-Z** o **zona**. Con la pestaña abierta, **mayús+clic** en cualquier objeto del juego lo busca.
 - **Porcentajes**: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Cada % dice de dónde sale (Tú, Forever, Classic\*).
