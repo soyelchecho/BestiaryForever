@@ -67,7 +67,25 @@
 
   section { padding: 56px 0; border-top: 1px solid var(--line); }
   h2 { font-family: Cinzel, serif; font-size: 28px; margin: 0 0 24px; }
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  /* Ilustración del libro del bestiario */
+  .book { display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: center; }
+  .dex { background: #0b0c11; border: 1px solid var(--line); padding: 12px; }
+  .dex-head { background: #1b1e29; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .dex-head b { font-family: Cinzel, serif; font-size: 16px; }
+  .dex-head span { background: var(--gold); color: #17130a; font-weight: 700; padding: 4px 12px; font-size: 14px; }
+  .dex-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .cell { background: #171922; padding: 10px 8px 8px; text-align: center; font-size: 12px; }
+  .cell .fig { height: 58px; margin: 0 auto 6px; width: 46px; border-radius: 45% 45% 30% 30%; }
+  .cell .fig.on { background: linear-gradient(#b08158, #5c3b22); }
+  .cell .fig.on2 { background: linear-gradient(#6f8f5a, #2f4a25); width: 52px; border-radius: 50% 50% 20% 20%; }
+  .cell .fig.off { background: #000; box-shadow: 0 0 0 1px #20232e; }
+  .cell .fig.off2 { background: #000; width: 54px; height: 44px; margin-top: 14px; border-radius: 60% 60% 25% 25%; box-shadow: 0 0 0 1px #20232e; }
+  .cell em { display: block; font-style: normal; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cell em.q { color: #9496a3; }
+  .cell small { color: var(--muted); font-size: 10px; }
+  .chips { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .chips b { color: var(--gold); font-weight: 700; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
   .card h3 { margin: 0 0 8px; font-size: 17px; color: var(--gold); }
   .card p { margin: 0; color: var(--muted); font-size: 15px; }
@@ -83,7 +101,7 @@
   html[lang="es"] [data-l="es"] { display: revert; }
 
   @media (max-width: 820px) {
-    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 24px; }
+    .hero, .book { grid-template-columns: 1fr; gap: 36px; padding-top: 24px; }
     .grid3 { grid-template-columns: 1fr; }
     td:first-child { white-space: normal; }
   }
@@ -108,7 +126,7 @@
       <div class="cta">
         <a class="btn primary" href="https://github.com/soyelchecho/BestiaryForever/releases/latest"><span data-l="en">Download</span><span data-l="es">Descargar</span></a>
         <a class="btn ghost" href="https://github.com/soyelchecho/BestiaryForever">GitHub</a>
-        <span class="badge"><b>v0.1.0 beta</b> · Interface 16001 · GPL-3.0</span>
+        <span class="badge"><b>v0.2.0 beta</b> · Interface 16001 · GPL-3.0</span>
       </div>
     </div>
 
@@ -161,10 +179,40 @@
         <p data-l="es">Pulsa + para ver un modelo 3D que puedes girar y la tabla de botín completa. Pasa el ratón por un ítem para ver todas las fuentes; mayús+clic para enlazarlo en el chat.</p>
       </div>
       <div class="card">
-        <h3 data-l="en">Your bestiary</h3><h3 data-l="es">Tu bestiario</h3>
-        <p data-l="en">Every creature you meet is saved: levels seen, zone, times met, looted kills, gold looted, first and last seen. Search it with <code>/bf</code>.</p>
-        <p data-l="es">Cada criatura que encuentras queda guardada: niveles vistos, zona, veces vista, cadáveres saqueados, oro, primera y última vez. Búscala con <code>/bf</code>.</p>
+        <h3 data-l="en">Bestiary book</h3><h3 data-l="es">Libro del bestiario</h3>
+        <p data-l="en">Like a Pokédex, by continent, zone and dungeon. Undiscovered creatures are black silhouettes until you meet them. Open it with <code>/bf</code> or the book button.</p>
+        <p data-l="es">Como una Pokédex, por continentes, zonas y mazmorras. Las criaturas sin descubrir son siluetas negras hasta que las encuentras. Ábrelo con <code>/bf</code> o el botón del libro.</p>
       </div>
+      <div class="card">
+        <h3 data-l="en">Find an item</h3><h3 data-l="es">Busca un objeto</h3>
+        <p data-l="en">Search any item in English or Spanish and see every creature that drops it, sorted by highest %, A-Z or zone.</p>
+        <p data-l="es">Busca cualquier objeto en español o inglés y ve todas las criaturas que lo sueltan, ordenadas por mayor %, A-Z o zona.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap book">
+    <div>
+      <h2 data-l="en">Gotta find them all</h2>
+      <h2 data-l="es">Encuéntralos a todos</h2>
+      <p class="note" data-l="en">Every zone has its own numbered list of creatures, ordered by level, with a counter of how many you have discovered. Creatures you haven't met yet show only their shape in black: you know something lives there, not what it is. Target it once and it's yours, with its 3D model, levels, rank, zones and its whole loot table.</p>
+      <p class="note" data-l="es">Cada zona tiene su lista numerada de criaturas, ordenada por nivel, con un contador de cuántas has descubierto. Las que aún no has encontrado solo muestran su forma en negro: sabes que ahí vive algo, pero no qué es. Selecciónala una vez y queda en tu libro, con su modelo 3D, niveles, rango, zonas y toda su tabla de botín.</p>
+      <p class="note" data-l="en">3,161 creatures in 50 zones and 47 dungeons and raids.</p>
+      <p class="note" data-l="es">3.161 criaturas en 50 zonas y 47 mazmorras y bandas.</p>
+    </div>
+    <div class="dex" aria-label="Illustration of the bestiary book">
+      <div class="dex-head"><b data-l="en">Elwynn Forest</b><b data-l="es">Bosque de Elwynn</b><span>12 / 57</span></div>
+      <div class="dex-grid">
+        <div class="cell"><div class="fig on"></div><em>Defias Thug</em><small>#006</small></div>
+        <div class="cell"><div class="fig off"></div><em class="q">???</em><small>#007</small></div>
+        <div class="cell"><div class="fig on2"></div><em>Kobold Tunneler</em><small>#008</small></div>
+        <div class="cell"><div class="fig off2"></div><em class="q">???</em><small>#009</small></div>
+      </div>
+      <div class="chips"><span data-l="en"><b>3</b> Looted</span><span data-l="es"><b>3</b> Saqueados</span><span data-l="en"><b>1/5</b> Rares</span><span data-l="es"><b>1/5</b> Raros</span><span data-l="en"><b>0/1</b> Elites</span><span data-l="es"><b>0/1</b> Élites</span></div>
+      <p class="caption" data-l="en">Illustration of a zone page in the bestiary.</p>
+      <p class="caption" data-l="es">Ilustración de una página de zona del bestiario.</p>
     </div>
   </div>
 </section>
@@ -192,12 +240,12 @@
     <h2 data-l="en">Install</h2>
     <h2 data-l="es">Instalación</h2>
     <ol data-l="en">
-      <li>Download <code>BestiaryForever-0.1.0.zip</code> from <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
+      <li>Download <code>BestiaryForever-0.2.0.zip</code> from <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
       <li>Extract the <code>BestiaryForever</code> folder into <code>World of Warcraft\_forever_\Interface\AddOns\</code>.</li>
       <li>Restart the game or type <code>/reload</code>. Open the bestiary with <code>/bf</code>, or from the addon compartment next to the minimap.</li>
     </ol>
     <ol data-l="es">
-      <li>Descarga <code>BestiaryForever-0.1.0.zip</code> desde <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
+      <li>Descarga <code>BestiaryForever-0.2.0.zip</code> desde <a href="https://github.com/soyelchecho/BestiaryForever/releases/latest">Releases</a>.</li>
       <li>Extrae la carpeta <code>BestiaryForever</code> en <code>World of Warcraft\_forever_\Interface\AddOns\</code>.</li>
       <li>Reinicia el juego o escribe <code>/reload</code>. Abre el bestiario con <code>/bf</code> o desde el compartimento de addons junto al minimapa.</li>
     </ol>
@@ -207,7 +255,7 @@
 
 <footer>
   <div class="wrap">
-    <p><strong><a href="https://foreverdb.net">Data from ForeverDB.net</a></strong><span data-l="en">: creature loot data. Part of the rates are Classic data from CMaNGOS classic-db (GPL-3.0).</span><span data-l="es">: datos de botín de las criaturas. Parte de los porcentajes son datos de Classic de CMaNGOS classic-db (GPL-3.0).</span></p>
+    <p><strong><a href="https://foreverdb.net">Data from ForeverDB.net</a></strong><span data-l="en">: loot, zones and item names. Levels, spawns and part of the rates: <a href="https://github.com/cmangos/classic-db">CMaNGOS classic-db</a> (GPL-3.0).</span><span data-l="es">: botín, zonas y nombres de objetos. Niveles, apariciones y parte de los porcentajes: <a href="https://github.com/cmangos/classic-db">CMaNGOS classic-db</a> (GPL-3.0).</span></p>
     <p data-l="en">Bestiary Forever is free software under the <a href="https://github.com/soyelchecho/BestiaryForever/blob/main/LICENSE">GPL-3.0</a>. Not affiliated with Blizzard Entertainment or ForeverDB.net. World of Warcraft is a trademark of Blizzard Entertainment, Inc.</p>
     <p data-l="es">Bestiary Forever es software libre bajo la <a href="https://github.com/soyelchecho/BestiaryForever/blob/main/LICENSE">GPL-3.0</a>. No está afiliado a Blizzard Entertainment ni a ForeverDB.net. World of Warcraft es una marca de Blizzard Entertainment, Inc.</p>
   </div>

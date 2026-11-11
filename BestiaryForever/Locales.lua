@@ -1,4 +1,4 @@
--- Bestiary Forever - textos de la interfaz (español por defecto en clientes es*, inglés en el resto).
+-- Bestiary Forever - textos de la interfaz (español en clientes esES/esMX, inglés en el resto).
 local _, ns = ...
 
 local en = {
@@ -18,17 +18,17 @@ local en = {
     SRC_FOREVER = "measured in Forever", SRC_CLASSIC = "Classic data",
     CREDIT = "Data: ForeverDB.net - https://foreverdb.net",
     BESTIARY = "Bestiary",
-    DISCOVERED = "%d creatures discovered",
+    ITEMS = "Items",
     SEARCH = "Search",
     KILLS = "Looted kills: %d",
     SEEN_TIMES = "Targeted %d times",
     FIRST_SEEN = "First seen: %s",
     LAST_SEEN = "Last seen: %s",
     ZONE = "Zone: %s",
+    ZONES = "Zones: %s",
     LEVELS = "Level %s",
     TYPE = "Type: %s",
-    SELECT_CREATURE = "Select a creature from the list.",
-    EMPTY_BESTIARY = "Target creatures in the world to fill your bestiary.",
+    NPC_ID = "Creature ID: %d",
     HELP = "Commands: /bf (bestiary), /bf frame (show/hide target frame), /bf lock, /bf reset, /bf minkills <n>, /bf about",
     LOCKED = "Frame locked.", UNLOCKED = "Frame unlocked (drag to move).",
     RESET = "Positions reset.",
@@ -36,7 +36,30 @@ local en = {
     FRAME_ON = "Target frame enabled.", FRAME_OFF = "Target frame disabled.",
     ABOUT = "Bestiary Forever %s - loot data from ForeverDB.net (https://foreverdb.net), %d creatures, data version %s. GPL-3.0.",
     EXPAND = "Expand", COLLAPSE = "Collapse",
+    OPEN_IN_BESTIARY = "Open in the bestiary",
     UNKNOWN = "Unknown",
+    -- Bestiario por zonas
+    DUNGEONS = "Dungeons & raids",
+    OTHER = "Other",
+    UNKNOWN_ZONE = "Unknown zone",
+    DISCOVERED_SHORT = "Discovered",
+    LOOTED_SHORT = "Looted",
+    RARES_SHORT = "Rares",
+    ELITES_SHORT = "Elites",
+    BOSSES_SHORT = "Bosses",
+    UNDISCOVERED = "???",
+    UNDISCOVERED_INFO = "Not discovered yet. Target this creature in the world to add it to your bestiary.",
+    UNDISCOVERED_LOOT = "Discover this creature to see its loot.",
+    BACK = "Back",
+    FILTER_ZONE = "Filter this zone",
+    -- Búsqueda inversa
+    ITEM_SEARCH_HINT = "Type an item name to see which creatures drop it.",
+    ITEM_RESULTS = "%d items",
+    ITEM_NO_RESULTS = "No items found.",
+    DROPPED_BY = "Dropped by %d creatures",
+    SORT_PCT = "Highest %", SORT_NAME = "A-Z", SORT_ZONE = "Zone",
+    NOT_DISCOVERED_TAG = "not discovered",
+    SELECT_ITEM = "Select an item from the list.",
 }
 
 local es = {
@@ -56,17 +79,17 @@ local es = {
     SRC_FOREVER = "medido en Forever", SRC_CLASSIC = "dato de Classic",
     CREDIT = "Datos: ForeverDB.net - https://foreverdb.net",
     BESTIARY = "Bestiario",
-    DISCOVERED = "%d criaturas descubiertas",
+    ITEMS = "Objetos",
     SEARCH = "Buscar",
     KILLS = "Cadáveres saqueados: %d",
     SEEN_TIMES = "Seleccionado %d veces",
     FIRST_SEEN = "Visto por primera vez: %s",
     LAST_SEEN = "Visto por última vez: %s",
     ZONE = "Zona: %s",
+    ZONES = "Zonas: %s",
     LEVELS = "Nivel %s",
     TYPE = "Tipo: %s",
-    SELECT_CREATURE = "Selecciona una criatura de la lista.",
-    EMPTY_BESTIARY = "Selecciona criaturas en el mundo para llenar tu bestiario.",
+    NPC_ID = "ID de criatura: %d",
     HELP = "Comandos: /bf (bestiario), /bf frame (mostrar/ocultar ventana del objetivo), /bf lock, /bf reset, /bf minkills <n>, /bf about",
     LOCKED = "Ventana bloqueada.", UNLOCKED = "Ventana desbloqueada (arrástrala para moverla).",
     RESET = "Posiciones restablecidas.",
@@ -74,10 +97,40 @@ local es = {
     FRAME_ON = "Ventana del objetivo activada.", FRAME_OFF = "Ventana del objetivo desactivada.",
     ABOUT = "Bestiary Forever %s - datos de botín de ForeverDB.net (https://foreverdb.net), %d criaturas, versión de datos %s. GPL-3.0.",
     EXPAND = "Expandir", COLLAPSE = "Contraer",
+    OPEN_IN_BESTIARY = "Abrir en el bestiario",
     UNKNOWN = "Desconocido",
+    DUNGEONS = "Mazmorras y bandas",
+    OTHER = "Otros",
+    UNKNOWN_ZONE = "Zona desconocida",
+    DISCOVERED_SHORT = "Descubiertos",
+    LOOTED_SHORT = "Saqueados",
+    RARES_SHORT = "Raros",
+    ELITES_SHORT = "Élites",
+    BOSSES_SHORT = "Jefes",
+    UNDISCOVERED = "???",
+    UNDISCOVERED_INFO = "Aún no descubierto. Selecciona esta criatura en el mundo para añadirla a tu bestiario.",
+    UNDISCOVERED_LOOT = "Descubre esta criatura para ver su botín.",
+    BACK = "Volver",
+    FILTER_ZONE = "Filtrar esta zona",
+    ITEM_SEARCH_HINT = "Escribe el nombre de un objeto para ver qué criaturas lo sueltan.",
+    ITEM_RESULTS = "%d objetos",
+    ITEM_NO_RESULTS = "No se encontraron objetos.",
+    DROPPED_BY = "Lo sueltan %d criaturas",
+    SORT_PCT = "Mayor %", SORT_NAME = "A-Z", SORT_ZONE = "Zona",
+    NOT_DISCOVERED_TAG = "sin descubrir",
+    SELECT_ITEM = "Selecciona un objeto de la lista.",
 }
 
 local locale = GetLocale and GetLocale() or "enUS"
-local L = (locale == "esES" or locale == "esMX") and es or en
+ns.isSpanish = locale == "esES" or locale == "esMX"
+local L = ns.isSpanish and es or en
 setmetatable(L, { __index = function(_, k) return en[k] or k end })
 ns.L = L
+
+-- Tipos de criatura de la base de datos (CreatureType de Classic)
+ns.CREATURE_TYPES = ns.isSpanish
+    and { "Bestia", "Dragonante", "Demonio", "Elemental", "Gigante", "No-muerto", "Humanoide", "Alimaña", "Mecánico", "Sin especificar" }
+    or { "Beast", "Dragonkin", "Demon", "Elemental", "Giant", "Undead", "Humanoid", "Critter", "Mechanical", "Not specified" }
+
+-- Rango de la base de datos: 1 élite, 2 raro élite, 3 jefe, 4 raro
+ns.RANK_LABELS = { [1] = L.ELITE, [2] = L.RAREELITE, [3] = L.BOSS, [4] = L.RARE }

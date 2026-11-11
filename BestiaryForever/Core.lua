@@ -62,6 +62,7 @@ function ns.GetCreature(npc, create)
         local static = ns.creatureDB and ns.creatureDB[npc]
         c = { name = static and static.n, seen = 0, kills = 0, drops = {}, money = 0, firstSeen = now(), lastSeen = now() }
         db[npc] = c
+        if ns.MarkIndexDirty then ns.MarkIndexDirty() end
     end
     return c
 end
@@ -92,6 +93,10 @@ function ns.RecordTarget(unit)
     if family then c.family = family end
     local mapID, zone = CurrentZone()
     if mapID then c.mapID, c.zone = mapID, zone end
+    if IsInInstance() then
+        local instanceID = select(8, GetInstanceInfo())
+        if instanceID then c.instanceID = instanceID end
+    end
     if ns.OnBestiaryChanged then ns.OnBestiaryChanged() end
     return npc
 end
