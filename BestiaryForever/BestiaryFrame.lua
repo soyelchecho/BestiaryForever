@@ -80,6 +80,8 @@ end
 
 local function SetCreatureModel(model, npc, discovered)
     model:ClearModel()
+    -- Las partículas (fuego, brillos, auras) no responden a la luz: apagadas mientras no se ha descubierto.
+    pcall(model.SetParticlesEnabled, model, discovered and true or false)
     local e = ns.creatureDB[npc]
     if discovered then
         if not pcall(model.SetCreature, model, npc) and e and e.d then pcall(model.SetDisplayInfo, model, e.d) end
@@ -217,26 +219,66 @@ function RenderHeader()
     h.stats[4].value:SetText(("%d/%d"):format(s.bosses, s.bossesTotal))
 end
 
+-- Silueta, segunda parte: algunos modelos tienen materiales que brillan por sí mismos (fantasmas, elementales,
+-- escorpiones) y la luz negra no los apaga. Encima del modelo va una capa que multiplica por SHADE: el negro sigue
+-- negro y lo que brilla queda muy oscuro. Para que la capa no se vea como un recuadro, el fondo que hay debajo se
+-- aclara en la misma proporción (fondo / SHADE), de modo que el resultado final es el color de fondo normal.
+local SHADE = 0.22
+local CELL_BG = { 0.09, 0.10, 0.14 }
+
+local function CreateShade(parent, anchor)
+    local shade = CreateFrame("Frame", nil, parent)
+    shade:SetAllPoints(anchor or parent)
+    shade:SetFrameLevel(parent:GetFrameLevel() + 3)
+    local t = shade:CreateTexture(nil, "ARTWORK")
+    t:SetAllPoints()
+    t:SetColorTexture(SHADE, SHADE, SHADE, 1)
+    t:SetBlendMode("MOD")
+    shade:Hide()
+    return shade
+end
+
 local function CreateCell(i)
     local cell = CreateFrame("Button", nil, frame.grid.content)
     cell:SetSize(CELL_W - 6, CELL_H - 6)
-    Background(cell, 0.09, 0.10, 0.14, 0.95)
-    cell:SetHighlightTexture("Interface\\Buttons\\WHITE8X8")
-    cell:GetHighlightTexture():SetVertexColor(0.89, 0.71, 0.36, 0.12)
+    cell.bg = cell:CreateTexture(nil, "BACKGROUND")
+    cell.bg:SetAllPoints()
     cell.model = CreateFrame("PlayerModel", nil, cell)
     cell.model:SetPoint("TOPLEFT", 4, -4)
     cell.model:SetPoint("TOPRIGHT", -4, -4)
     cell.model:SetHeight(CELL_H - 50)
-    cell.name = Font(cell, "GameFontHighlightSmall", "CENTER")
+    cell.model:SetFrameLevel(cell:GetFrameLevel() + 1)
+    cell.shade = CreateShade(cell)
+    -- Textos y resaltado por encima de la capa de sombra, para que no se oscurezcan
+    local top = CreateFrame("Frame", nil, cell)
+    top:SetAllPoints()
+    top:SetFrameLevel(cell:GetFrameLevel() + 5)
+    cell.hover = top:CreateTexture(nil, "OVERLAY")
+    cell.hover:SetAllPoints()
+    cell.hover:SetColorTexture(0.89, 0.71, 0.36, 0.10)
+    cell.hover:Hide()
+    cell.name = Font(top, "GameFontHighlightSmall", "CENTER")
     cell.name:SetPoint("BOTTOMLEFT", 4, 22)
     cell.name:SetPoint("BOTTOMRIGHT", -4, 22)
-    cell.num = Font(cell, "GameFontDisableSmall")
+    cell.num = Font(top, "GameFontDisableSmall")
     cell.num:SetPoint("BOTTOMLEFT", 6, 6)
-    cell.tag = Font(cell, "GameFontDisableSmall", "RIGHT")
+    cell.tag = Font(top, "GameFontDisableSmall", "RIGHT")
     cell.tag:SetPoint("BOTTOMRIGHT", -6, 6)
+    cell:SetScript("OnEnter", function(self) self.hover:Show() end)
+    cell:SetScript("OnLeave", function(self) self.hover:Hide() end)
     cell:SetScript("OnClick", function(self) if self.npc then ShowDetail(self.npc) end end)
     frame.cells[i] = cell
     return cell
+end
+
+local function SetCellShaded(cell, shaded)
+    if shaded then
+        cell.bg:SetColorTexture(CELL_BG[1] / SHADE, CELL_BG[2] / SHADE, CELL_BG[3] / SHADE, 1)
+        cell.shade:Show()
+    else
+        cell.bg:SetColorTexture(CELL_BG[1], CELL_BG[2], CELL_BG[3], 1)
+        cell.shade:Hide()
+    end
 end
 
 function RenderGrid()
@@ -262,6 +304,7 @@ function RenderGrid()
                 if cell.npc ~= npc or cell.discovered ~= discovered then
                     cell.npc, cell.discovered = npc, discovered
                     SetCreatureModel(cell.model, npc, discovered)
+                    SetCellShaded(cell, not discovered)
                 end
                 cell.num:SetText(("#%03d"):format(numbers[npc] or 0))
                 if discovered then
@@ -297,6 +340,14 @@ function ShowDetail(npc)
     end
     d.num:SetText(number and ("#%03d"):format(number) or "")
     SetCreatureModel(d.model, npc, discovered)
+    if discovered then
+        d.mbg:SetColorTexture(0, 0, 0, 0.45)
+        d.shade:Hide()
+    else
+        -- el fondo del modelo (~0.038, 0.041, 0.054 una vez compuesto) aclarado por SHADE, ver CreateShade
+        d.mbg:SetColorTexture(0.038 / SHADE, 0.041 / SHADE, 0.054 / SHADE, 1)
+        d.shade:Show()
+    end
     d.model.facing = 0
     d.model:SetFacing(0)
 
@@ -438,9 +489,10 @@ local function BuildBestiaryPage(page)
     d.mapBtn:SetPoint("TOPLEFT", d.model, "BOTTOMLEFT", 0, -6)
     d.mapBtn:SetText(L.OPEN_MAP)
     d.mapBtn:SetScript("OnClick", function(self) ns.OpenMap(self.map) end)
-    local mbg = d:CreateTexture(nil, "BORDER")
-    mbg:SetAllPoints(d.model)
-    mbg:SetColorTexture(0, 0, 0, 0.45)
+    d.mbg = d:CreateTexture(nil, "BORDER")
+    d.mbg:SetAllPoints(d.model)
+    d.mbg:SetColorTexture(0, 0, 0, 0.45)
+    d.shade = CreateShade(d, d.model)
 
     d.info = d:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     d.info:SetPoint("TOPLEFT", d.model, "TOPRIGHT", 14, 0)
