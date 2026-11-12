@@ -56,7 +56,7 @@
 </ul>
 <hr />
 <h2>Where the % comes from</h2>
-<p>Each item shows its best estimate, with a coloured tag:</p>
+<p>Each item shows its rate with a coloured tag. <strong>The documented rate always comes first</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -66,10 +66,6 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>You</strong> (green)</td>
-<td>Your own rate, after 20+ looted kills of that creature</td>
-</tr>
-<tr>
 <td><strong>Forever</strong> (blue)</td>
 <td>Measured in WoW Forever (ForeverDB)</td>
 </tr>
@@ -78,8 +74,8 @@
 <td>Classic rate: may differ in Forever</td>
 </tr>
 <tr>
-<td><strong>You (n)</strong> (yellow)</td>
-<td>Your own rate, few kills yet</td>
+<td><strong>You</strong> (green)</td>
+<td>Only for items with no documented rate: your own rate, after 20+ looted kills</td>
 </tr>
 <tr>
 <td><strong>seen N</strong> (grey)</td>
@@ -87,10 +83,10 @@
 </tr>
 </tbody>
 </table>
-<p>The addon <strong>records every corpse you loot</strong>, so your own rates get better the more you play.</p>
+<p>The addon also <strong>records every corpse you loot</strong>: your own drops always show in the tooltip, and fill in the gaps where there is no documented rate.</p>
 <hr />
 <h2>Commands</h2>
-<p><code>/bf</code> bestiary · <code>/bf frame</code> show/hide the target window · <code>/bf lock</code> lock/unlock · <code>/bf reset</code> reset positions · <code>/bf minkills 20</code> kills needed to trust your own rate · <code>/bf about</code> version and credits</p>
+<p><code>/bf</code> bestiary · <code>/bf frame</code> show/hide the target window · <code>/bf lock</code> lock/unlock · <code>/bf reset</code> reset positions · <code>/bf minkills 20</code> kills needed to use your own rate when there is no documented one · <code>/bf about</code> version and credits</p>
 <hr />
 <h2>Data and credits</h2>
 <p><strong>3,161 creatures, 50 zones, 47 dungeons and raids, 22,852 drops.</strong></p>
@@ -107,5 +103,5 @@
 <li><strong>Ventana del objetivo</strong>: selecciona una criatura y verás su nivel, vida y botín con %. <strong>+</strong> la expande; el <strong>botón del oso</strong> la abre en el bestiario.</li>
 <li><strong>Bestiario</strong> (<strong><code>/bf</code></strong>): por continentes, zonas y mazmorras, con <strong>barras de progreso y %</strong> de todo el bestiario, cada continente y cada zona. Las criaturas que no has encontrado son <strong>siluetas negras</strong>. Pulsa una para ver su ficha y todo su botín, y <strong>Ver en el mapa</strong> para abrir su zona.</li>
 <li><strong>Búsqueda de objetos</strong> (pestaña <strong>Objetos</strong>): busca un objeto (en español o inglés) y ve qué criaturas lo sueltan, ordenadas por <strong>mayor %</strong>, <strong>A-Z</strong> o <strong>zona</strong>. Con la pestaña abierta, <strong>mayús+clic</strong> en cualquier objeto del juego lo busca.</li>
-<li><strong>Porcentajes</strong>: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Cada % dice de dónde sale (Tú, Forever, Classic*).</li>
+<li><strong>Porcentajes</strong>: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Primero se usa el % documentado (Forever, luego Classic*); tus datos solo cubren lo que no está documentado, a partir de 20 cadáveres.</li>
 </ul>

@@ -52,23 +52,22 @@ A small borderless window: 3D portrait, name, level, elite/rare/boss, type and h
 
 ## Where the % comes from
 
-Each item shows its best estimate, with a coloured tag:
+Each item shows its rate with a coloured tag. **The documented rate always comes first**:
 
 | Tag | Meaning |
 |---|---|
-| **You** (green) | Your own rate, after 20+ looted kills of that creature |
 | **Forever** (blue) | Measured in WoW Forever (ForeverDB) |
 | **Classic\*** (orange) | Classic rate: may differ in Forever |
-| **You (n)** (yellow) | Your own rate, few kills yet |
+| **You** (green) | Only for items with no documented rate: your own rate, after 20+ looted kills |
 | **seen N** (grey) | No rate yet: how many times players saw it drop |
 
-The addon **records every corpse you loot**, so your own rates get better the more you play.
+The addon also **records every corpse you loot**: your own drops always show in the tooltip, and fill in the gaps where there is no documented rate.
 
 ---
 
 ## Commands
 
-`/bf` bestiary · `/bf frame` show/hide the target window · `/bf lock` lock/unlock · `/bf reset` reset positions · `/bf minkills 20` kills needed to trust your own rate · `/bf about` version and credits
+`/bf` bestiary · `/bf frame` show/hide the target window · `/bf lock` lock/unlock · `/bf reset` reset positions · `/bf minkills 20` kills needed to use your own rate when there is no documented one · `/bf about` version and credits
 
 ---
 
@@ -92,4 +91,4 @@ Not affiliated with Blizzard Entertainment or ForeverDB.net.
 - **Ventana del objetivo**: selecciona una criatura y verás su nivel, vida y botín con %. **+** la expande; el **botón del oso** la abre en el bestiario.
 - **Bestiario** (**`/bf`**): por continentes, zonas y mazmorras, con **barras de progreso y %** de todo el bestiario, cada continente y cada zona. Las criaturas que no has encontrado son **siluetas negras**. Pulsa una para ver su ficha y todo su botín, y **Ver en el mapa** para abrir su zona.
 - **Búsqueda de objetos** (pestaña **Objetos**): busca un objeto (en español o inglés) y ve qué criaturas lo sueltan, ordenadas por **mayor %**, **A-Z** o **zona**. Con la pestaña abierta, **mayús+clic** en cualquier objeto del juego lo busca.
-- **Porcentajes**: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Cada % dice de dónde sale (Tú, Forever, Classic\*).
+- **Porcentajes**: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Primero se usa el % documentado (Forever, luego Classic\*); tus datos solo cubren lo que no está documentado, a partir de 20 cadáveres.

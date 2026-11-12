@@ -7,7 +7,7 @@ Target a creature and a small borderless window shows its 3D portrait, level, he
 
 **Loot data from [ForeverDB.net](https://foreverdb.net).**
 
-> **Status: beta (v0.2.7).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
+> **Status: beta (v0.2.8).** All the features below are implemented. WoW Forever's addon API (the Midnight client, interface 16001) restricts some values during combat, so please [report anything that looks wrong](https://github.com/soyelchecho/BestiaryForever/issues).
 
 *[Leer en español](#español)*
 
@@ -26,14 +26,13 @@ Target a creature and a small borderless window shows its 3D portrait, level, he
 
 ## Where the drop rates come from
 
-Each item shows a **best estimate**, chosen in this order:
+Each item shows a **best estimate**. The documented rate always comes first, in this order:
 
 | Tag | Meaning |
 |---|---|
-| **You** (green) | Your own rate, once you have looted at least 20 corpses of that creature (`/bf minkills <n>` to change it) |
 | **Forever** (blue) | Rate measured in WoW Forever by ForeverDB |
 | **Classic\*** (orange) | Classic rate (CMaNGOS classic-db) that ForeverDB uses until there is a Forever one. It may differ in Forever |
-| **You (n)** (yellow) | Your own rate with few samples (n looted corpses) |
+| **You** (green) | Only for items with no documented rate: your own rate, once you have looted at least 20 corpses of that creature (`/bf minkills <n>` to change it) |
 | **seen N** (grey) | No rate yet, only how many times ForeverDB players saw it drop |
 
 The tooltip always shows all of them, not only the chosen one. Your rates are counted over the corpses you looted: a creature that dropped nothing and that you didn't open isn't counted.
@@ -52,7 +51,7 @@ The tooltip always shows all of them, not only the chosen one. Your rates are co
 | `/bf frame` | Show or hide the target frame |
 | `/bf lock` | Lock or unlock the frames' position |
 | `/bf reset` | Reset the frames' position |
-| `/bf minkills <n>` | Looted corpses needed before your own rate is trusted (default 20) |
+| `/bf minkills <n>` | Looted corpses needed before your own rate is used for items with no documented rate (default 20) |
 | `/bf about` | Version and data credits |
 
 ## Updating the data
@@ -85,6 +84,6 @@ Current data: **3,161 creatures** (2,761 placed in a zone or dungeon), **22,852 
 - **Búsqueda de objetos**: en la pestaña *Objetos* buscas un objeto (en español o inglés) y ves todas las criaturas que lo sueltan, ordenadas por **mayor %** (por defecto), **A-Z** o **zona**.
 
 - **Instalación**: descarga el zip de [Releases](https://github.com/soyelchecho/BestiaryForever/releases) y extrae la carpeta `BestiaryForever` en `World of Warcraft\_forever_\Interface\AddOns\`.
-- **Porcentajes**: el addon combina los datos de ForeverDB con los drops que tú registras. Usa tus porcentajes cuando tienes al menos 20 cadáveres saqueados; si no, el de Forever; si no, el de Classic (marcado con \*). El tooltip muestra todas las fuentes.
+- **Porcentajes**: el addon combina los datos de ForeverDB con los drops que tú registras. Primero usa el porcentaje documentado: el de Forever y, si no hay, el de Classic (marcado con \*). Tu propio porcentaje solo se usa para objetos sin porcentaje documentado y a partir de 20 cadáveres saqueados. El tooltip muestra todas las fuentes, también tus drops.
 - **Comandos**: `/bf`, `/bf frame`, `/bf lock`, `/bf reset`, `/bf minkills <n>`, `/bf about`.
 - **Créditos**: datos de botín de [ForeverDB.net](https://foreverdb.net). Licencia GPL-3.0.

@@ -20,14 +20,14 @@ Todo lo que hay que pegar o subir está en esta carpeta. Crear el proyecto requi
 | **Issues** | `https://github.com/soyelchecho/BestiaryForever/issues` |
 | **Website / Wiki** | `https://soyelchecho.github.io/BestiaryForever/` |
 
-4. **Description**: cambia el editor a **Markdown** y pega todo el contenido de `curseforge/description.md`. Las imágenes se cargan desde la web del proyecto, así que no hay que subirlas aparte.
+4. **Description**: abre `curseforge/description-preview.html` en el navegador y pulsa **Copiar código HTML**. En CurseForge deja el editor en **WYSIWYG**, pulsa **`</>`**, borra lo que haya, pega con **Ctrl+V** y vuelve a pulsar **`</>`**. (Pegar en modo Markdown pierde los títulos y las tablas.) Las imágenes se cargan desde la web del proyecto, así que no hay que subirlas aparte.
 5. Guarda. CurseForge revisa los proyectos nuevos antes de publicarlos (suele tardar de horas a un par de días).
 
 ## 2. Subir el archivo
 
 1. En el proyecto: **Files → Upload File**.
-2. Archivo: el zip de la última versión en `dist/`: ahora `BestiaryForever-0.2.7.zip`.
-3. **Display name**: `Bestiary Forever 0.2.7`
+2. Archivo: el zip de la última versión en `dist/`: ahora `BestiaryForever-0.2.8.zip`.
+3. **Display name**: `Bestiary Forever 0.2.8`
 4. **Release type**: `Beta`
 5. **Game version**: marca la versión de **WoW Forever** (la que corresponde a la interfaz `16001`). Esto es lo que hace que aparezca en la sección *Forever* de la app de CurseForge.
 6. **Changelog**: pega las notas de la versión (están en el release de GitHub de esa versión).

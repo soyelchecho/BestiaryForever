@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descripción para CurseForge</title>
+<style>
+:root{--bg:#f4f2ee;--card:#fff;--text:#1d1d1f;--muted:#6b6b70;--line:#dddad3;--accent:#b8862b}
+@media (prefers-color-scheme: dark){:root{--bg:#141518;--card:#1d1f24;--text:#ececec;--muted:#a3a3ab;--line:#33363d;--accent:#e2b65b}}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,sans-serif}
+.bar{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:2}
+.bar b{margin-right:auto}
+button{font:inherit;font-weight:600;padding:9px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#17130a;cursor:pointer}
+button.alt{background:transparent;color:var(--text);border-color:var(--line)}
+.ok{color:var(--accent);font-weight:600;min-width:120px}
+.steps{max-width:860px;margin:16px auto 0;padding:0 16px;color:var(--muted);font-size:14px}
+.steps ol{margin:6px 0 0;padding-left:20px}
+#desc{max-width:860px;margin:16px auto 48px;padding:24px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+#desc img{max-width:100%;height:auto}
+#desc table{border-collapse:collapse;width:100%}#desc td,#desc th{border:1px solid var(--line);padding:6px 10px;text-align:left}
+</style></head><body>
+<div class="bar"><b>Bestiary Forever: descripción para CurseForge</b>
+<button id="copyHtml">Copiar código HTML</button>
+<button class="alt" id="copyRich">Copiar con formato</button>
+<span class="ok" id="ok"></span></div>
+<div class="steps"><b>Cómo pegarla en CurseForge</b>
+<ol><li><b>Opción A (recomendada):</b> pulsa <i>Copiar código HTML</i>. En CurseForge deja el editor en <b>WYSIWYG</b>, pulsa el botón <b>&lt;/&gt;</b>, borra lo que haya y pega con <b>Ctrl+V</b>. Vuelve a pulsar <b>&lt;/&gt;</b> para ver el resultado.</li>
+<li><b>Opción B:</b> pulsa <i>Copiar con formato</i> y pega con <b>Ctrl+V</b> directamente en el editor WYSIWYG (sin &lt;/&gt;).</li></ol></div>
+<div id="desc"><p><img alt="Bestiary Forever" src="https://soyelchecho.github.io/BestiaryForever/logo.png" /></p>
+<h1>Bestiary Forever</h1>
+<p><strong>Know what a creature drops before you pull it, and collect every creature in Azeroth like a Pokédex.</strong></p>
+<p>Target any creature and a small window shows its level, health and the loot it can drop, with drop rates. Everything you meet goes into your <strong>bestiary book</strong>, organised by zone. Creatures you haven't found yet are <strong>black silhouettes</strong>.</p>
+<p><em>Español abajo.</em></p>
+<hr />
+<h2>How to open it</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Target window</strong></td>
+<td>Target any creature. It appears on its own.</td>
+</tr>
+<tr>
+<td><strong>Bestiary book</strong></td>
+<td>Type <strong><code>/bf</code></strong>, click the <strong>bear button</strong> on the target window, or use the addon menu next to the minimap.</td>
+</tr>
+<tr>
+<td><strong>Item search</strong></td>
+<td>Open the bestiary and go to the <strong>Items</strong> tab.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>The parts</h2>
+<h3>1. Target window</h3>
+<p><img alt="Target window" src="https://soyelchecho.github.io/BestiaryForever/screenshots/target-window.png" /></p>
+<p>A small borderless window: 3D portrait, name, level, elite/rare/boss, type and health bar. Below it are the <strong>top 8 drops</strong> with their %. Hover an item to see where the % comes from.</p>
+<ul>
+<li><strong>+</strong> opens the <strong>expanded view</strong>: a big rotatable model and the full loot list.</li>
+<li>The <strong>bear button</strong> opens this creature in the bestiary.</li>
+<li>Drag it to move it. <code>/bf lock</code> locks it.</li>
+</ul>
+<h3>2. Bestiary book (<code>/bf</code>)</h3>
+<p><img alt="Bestiary book" src="https://soyelchecho.github.io/BestiaryForever/screenshots/bestiary.png" /></p>
+<ul>
+<li><strong>Left</strong>: your progress with bars and %: the whole bestiary, each continent, and each zone and dungeon (<code>10/102 · 9%</code>). Bars turn green when you complete a zone.</li>
+<li><strong>Top</strong>: the zone's progress bar and counter, plus how many you've looted and the rares, elites and bosses you've found.</li>
+<li><strong>Grid</strong>: every creature of the zone, numbered by level (<code>#001</code>). The ones you haven't found are <strong>black silhouettes with <code>???</code></strong>. Target one once and it's yours.</li>
+<li><strong>Click a creature</strong> for its full page: rotatable model, level, rank, type, zones, times met, looted kills, gold, dates and its <strong>whole loot list</strong>.</li>
+<li><strong>Show on map</strong> opens the world map at the creature's zone (dungeons: at the entrance).</li>
+</ul>
+<h3>3. Item search (Items tab)</h3>
+<p><img alt="Item search" src="https://soyelchecho.github.io/BestiaryForever/screenshots/item-search.png" /></p>
+<ul>
+<li>Type an item name (<strong>English or Spanish</strong>) and pick it: you get <strong>every creature that drops it</strong>.</li>
+<li>Sort by <strong>Highest %</strong> (default), <strong>A-Z</strong> or <strong>Zone</strong>.</li>
+<li><strong>Shift-click any item</strong> in the game (bags, chat, character sheet) while the tab is open to search for it.</li>
+<li>Click a creature to open it in the bestiary, or its <strong>zone</strong> to open the map there.</li>
+</ul>
+<hr />
+<h2>Where the % comes from</h2>
+<p>Each item shows its rate with a coloured tag. <strong>The documented rate always comes first</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Forever</strong> (blue)</td>
+<td>Measured in WoW Forever (ForeverDB)</td>
+</tr>
+<tr>
+<td><strong>Classic*</strong> (orange)</td>
+<td>Classic rate: may differ in Forever</td>
+</tr>
+<tr>
+<td><strong>You</strong> (green)</td>
+<td>Only for items with no documented rate: your own rate, after 20+ looted kills</td>
+</tr>
+<tr>
+<td><strong>seen N</strong> (grey)</td>
+<td>No rate yet: how many times players saw it drop</td>
+</tr>
+</tbody>
+</table>
+<p>The addon also <strong>records every corpse you loot</strong>: your own drops always show in the tooltip, and fill in the gaps where there is no documented rate.</p>
+<hr />
+<h2>Commands</h2>
+<p><code>/bf</code> bestiary · <code>/bf frame</code> show/hide the target window · <code>/bf lock</code> lock/unlock · <code>/bf reset</code> reset positions · <code>/bf minkills 20</code> kills needed to use your own rate when there is no documented one · <code>/bf about</code> version and credits</p>
+<hr />
+<h2>Data and credits</h2>
+<p><strong>3,161 creatures, 50 zones, 47 dungeons and raids, 22,852 drops.</strong></p>
+<ul>
+<li>Loot, zones and item names: <strong><a href="https://foreverdb.net">Data from ForeverDB.net</a></strong></li>
+<li>Levels, spawns and part of the rates: <a href="https://github.com/cmangos/classic-db">CMaNGOS classic-db</a> (GPL-3.0)</li>
+</ul>
+<p>Free and open source (GPL-3.0): <a href="https://github.com/soyelchecho/BestiaryForever">GitHub</a> · <a href="https://soyelchecho.github.io/BestiaryForever/">Website</a> · Bugs and ideas: <a href="https://github.com/soyelchecho/BestiaryForever/issues">Issues</a></p>
+<p>Not affiliated with Blizzard Entertainment or ForeverDB.net.</p>
+<hr />
+<h2>Español</h2>
+<p><strong>Sabe qué suelta una criatura antes de atacarla y colecciona todas las criaturas de Azeroth como en una Pokédex.</strong></p>
+<ul>
+<li><strong>Ventana del objetivo</strong>: selecciona una criatura y verás su nivel, vida y botín con %. <strong>+</strong> la expande; el <strong>botón del oso</strong> la abre en el bestiario.</li>
+<li><strong>Bestiario</strong> (<strong><code>/bf</code></strong>): por continentes, zonas y mazmorras, con <strong>barras de progreso y %</strong> de todo el bestiario, cada continente y cada zona. Las criaturas que no has encontrado son <strong>siluetas negras</strong>. Pulsa una para ver su ficha y todo su botín, y <strong>Ver en el mapa</strong> para abrir su zona.</li>
+<li><strong>Búsqueda de objetos</strong> (pestaña <strong>Objetos</strong>): busca un objeto (en español o inglés) y ve qué criaturas lo sueltan, ordenadas por <strong>mayor %</strong>, <strong>A-Z</strong> o <strong>zona</strong>. Con la pestaña abierta, <strong>mayús+clic</strong> en cualquier objeto del juego lo busca.</li>
+<li><strong>Porcentajes</strong>: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Primero se usa el % documentado (Forever, luego Classic*); tus datos solo cubren lo que no está documentado, a partir de 20 cadáveres.</li>
+</ul></div>
+<script>
+const HTML = "<p><img alt=\"Bestiary Forever\" src=\"https://soyelchecho.github.io/BestiaryForever/logo.png\" /></p>\n<h1>Bestiary Forever</h1>\n<p><strong>Know what a creature drops before you pull it, and collect every creature in Azeroth like a Pok\u00e9dex.</strong></p>\n<p>Target any creature and a small window shows its level, health and the loot it can drop, with drop rates. Everything you meet goes into your <strong>bestiary book</strong>, organised by zone. Creatures you haven't found yet are <strong>black silhouettes</strong>.</p>\n<p><em>Espa\u00f1ol abajo.</em></p>\n<hr />\n<h2>How to open it</h2>\n<table>\n<thead>\n<tr>\n<th>What</th>\n<th>How</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Target window</strong></td>\n<td>Target any creature. It appears on its own.</td>\n</tr>\n<tr>\n<td><strong>Bestiary book</strong></td>\n<td>Type <strong><code>/bf</code></strong>, click the <strong>bear button</strong> on the target window, or use the addon menu next to the minimap.</td>\n</tr>\n<tr>\n<td><strong>Item search</strong></td>\n<td>Open the bestiary and go to the <strong>Items</strong> tab.</td>\n</tr>\n</tbody>\n</table>\n<hr />\n<h2>The parts</h2>\n<h3>1. Target window</h3>\n<p><img alt=\"Target window\" src=\"https://soyelchecho.github.io/BestiaryForever/screenshots/target-window.png\" /></p>\n<p>A small borderless window: 3D portrait, name, level, elite/rare/boss, type and health bar. Below it are the <strong>top 8 drops</strong> with their %. Hover an item to see where the % comes from.</p>\n<ul>\n<li><strong>+</strong> opens the <strong>expanded view</strong>: a big rotatable model and the full loot list.</li>\n<li>The <strong>bear button</strong> opens this creature in the bestiary.</li>\n<li>Drag it to move it. <code>/bf lock</code> locks it.</li>\n</ul>\n<h3>2. Bestiary book (<code>/bf</code>)</h3>\n<p><img alt=\"Bestiary book\" src=\"https://soyelchecho.github.io/BestiaryForever/screenshots/bestiary.png\" /></p>\n<ul>\n<li><strong>Left</strong>: your progress with bars and %: the whole bestiary, each continent, and each zone and dungeon (<code>10/102 \u00b7 9%</code>). Bars turn green when you complete a zone.</li>\n<li><strong>Top</strong>: the zone's progress bar and counter, plus how many you've looted and the rares, elites and bosses you've found.</li>\n<li><strong>Grid</strong>: every creature of the zone, numbered by level (<code>#001</code>). The ones you haven't found are <strong>black silhouettes with <code>???</code></strong>. Target one once and it's yours.</li>\n<li><strong>Click a creature</strong> for its full page: rotatable model, level, rank, type, zones, times met, looted kills, gold, dates and its <strong>whole loot list</strong>.</li>\n<li><strong>Show on map</strong> opens the world map at the creature's zone (dungeons: at the entrance).</li>\n</ul>\n<h3>3. Item search (Items tab)</h3>\n<p><img alt=\"Item search\" src=\"https://soyelchecho.github.io/BestiaryForever/screenshots/item-search.png\" /></p>\n<ul>\n<li>Type an item name (<strong>English or Spanish</strong>) and pick it: you get <strong>every creature that drops it</strong>.</li>\n<li>Sort by <strong>Highest %</strong> (default), <strong>A-Z</strong> or <strong>Zone</strong>.</li>\n<li><strong>Shift-click any item</strong> in the game (bags, chat, character sheet) while the tab is open to search for it.</li>\n<li>Click a creature to open it in the bestiary, or its <strong>zone</strong> to open the map there.</li>\n</ul>\n<hr />\n<h2>Where the % comes from</h2>\n<p>Each item shows its rate with a coloured tag. <strong>The documented rate always comes first</strong>:</p>\n<table>\n<thead>\n<tr>\n<th>Tag</th>\n<th>Meaning</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Forever</strong> (blue)</td>\n<td>Measured in WoW Forever (ForeverDB)</td>\n</tr>\n<tr>\n<td><strong>Classic*</strong> (orange)</td>\n<td>Classic rate: may differ in Forever</td>\n</tr>\n<tr>\n<td><strong>You</strong> (green)</td>\n<td>Only for items with no documented rate: your own rate, after 20+ looted kills</td>\n</tr>\n<tr>\n<td><strong>seen N</strong> (grey)</td>\n<td>No rate yet: how many times players saw it drop</td>\n</tr>\n</tbody>\n</table>\n<p>The addon also <strong>records every corpse you loot</strong>: your own drops always show in the tooltip, and fill in the gaps where there is no documented rate.</p>\n<hr />\n<h2>Commands</h2>\n<p><code>/bf</code> bestiary \u00b7 <code>/bf frame</code> show/hide the target window \u00b7 <code>/bf lock</code> lock/unlock \u00b7 <code>/bf reset</code> reset positions \u00b7 <code>/bf minkills 20</code> kills needed to use your own rate when there is no documented one \u00b7 <code>/bf about</code> version and credits</p>\n<hr />\n<h2>Data and credits</h2>\n<p><strong>3,161 creatures, 50 zones, 47 dungeons and raids, 22,852 drops.</strong></p>\n<ul>\n<li>Loot, zones and item names: <strong><a href=\"https://foreverdb.net\">Data from ForeverDB.net</a></strong></li>\n<li>Levels, spawns and part of the rates: <a href=\"https://github.com/cmangos/classic-db\">CMaNGOS classic-db</a> (GPL-3.0)</li>\n</ul>\n<p>Free and open source (GPL-3.0): <a href=\"https://github.com/soyelchecho/BestiaryForever\">GitHub</a> \u00b7 <a href=\"https://soyelchecho.github.io/BestiaryForever/\">Website</a> \u00b7 Bugs and ideas: <a href=\"https://github.com/soyelchecho/BestiaryForever/issues\">Issues</a></p>\n<p>Not affiliated with Blizzard Entertainment or ForeverDB.net.</p>\n<hr />\n<h2>Espa\u00f1ol</h2>\n<p><strong>Sabe qu\u00e9 suelta una criatura antes de atacarla y colecciona todas las criaturas de Azeroth como en una Pok\u00e9dex.</strong></p>\n<ul>\n<li><strong>Ventana del objetivo</strong>: selecciona una criatura y ver\u00e1s su nivel, vida y bot\u00edn con %. <strong>+</strong> la expande; el <strong>bot\u00f3n del oso</strong> la abre en el bestiario.</li>\n<li><strong>Bestiario</strong> (<strong><code>/bf</code></strong>): por continentes, zonas y mazmorras, con <strong>barras de progreso y %</strong> de todo el bestiario, cada continente y cada zona. Las criaturas que no has encontrado son <strong>siluetas negras</strong>. Pulsa una para ver su ficha y todo su bot\u00edn, y <strong>Ver en el mapa</strong> para abrir su zona.</li>\n<li><strong>B\u00fasqueda de objetos</strong> (pesta\u00f1a <strong>Objetos</strong>): busca un objeto (en espa\u00f1ol o ingl\u00e9s) y ve qu\u00e9 criaturas lo sueltan, ordenadas por <strong>mayor %</strong>, <strong>A-Z</strong> o <strong>zona</strong>. Con la pesta\u00f1a abierta, <strong>may\u00fas+clic</strong> en cualquier objeto del juego lo busca.</li>\n<li><strong>Porcentajes</strong>: el addon registra lo que saqueas y combina tus datos con los de ForeverDB. Primero se usa el % documentado (Forever, luego Classic*); tus datos solo cubren lo que no est\u00e1 documentado, a partir de 20 cad\u00e1veres.</li>\n</ul>";
+const ok = document.getElementById('ok');
+function done(t){ ok.textContent = t; setTimeout(()=>ok.textContent='', 3000); }
+document.getElementById('copyHtml').onclick = async () => {
+  try { await navigator.clipboard.writeText(HTML); done('HTML copiado'); }
+  catch(e){ const t=document.createElement('textarea'); t.value=HTML; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done('HTML copiado'); }
+};
+document.getElementById('copyRich').onclick = async () => {
+  try { await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([HTML],{type:'text/html'}), 'text/plain': new Blob([document.getElementById('desc').innerText],{type:'text/plain'})})]); done('Copiado con formato'); }
+  catch(e){ const r=document.createRange(); r.selectNodeContents(document.getElementById('desc')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('copy'); s.removeAllRanges(); done('Copiado con formato'); }
+};
+</script></body></html>

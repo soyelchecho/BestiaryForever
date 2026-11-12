@@ -1,12 +1,12 @@
 -- Bestiary Forever - combina el botín de la base de datos (ForeverDB) con el que registra el propio jugador.
 --
--- Regla de confianza para el "% estimado" de cada ítem:
---   1. Tus propios datos, si tienes al menos settings.minKills cadáveres saqueados de esa criatura.
---   2. El % medido en Forever por ForeverDB.
---   3. El % de Classic (CMaNGOS) que ForeverDB usa mientras no hay dato de Forever: puede variar.
---   4. Tus propios datos con pocas muestras.
---   5. Sin %: solo "visto caer N veces" por jugadores de ForeverDB.
--- La vista expandida y el tooltip muestran siempre todas las fuentes, no solo la elegida.
+-- Regla para el "% estimado" de cada ítem: primero lo documentado.
+--   1. El % medido en Forever por ForeverDB.
+--   2. El % de Classic (CMaNGOS) que ForeverDB usa mientras no hay dato de Forever: puede variar.
+--   3. Solo si el ítem no tiene % documentado: tus propios datos, y solo con al menos settings.minKills
+--      cadáveres saqueados de esa criatura (con menos, una muestra pequeña da cifras absurdas: 1 de 1 = 100 %).
+--   4. Sin %: solo "visto caer N veces" por jugadores de ForeverDB.
+-- Tus propios datos se ven siempre en el tooltip ("Tus drops: 1 de 1"), pero no sustituyen al % documentado.
 local _, ns = ...
 
 local parsed = {}
@@ -81,14 +81,12 @@ function ns.GetMergedLoot(npc)
     local minKills = ns.settings and ns.settings.minKills or 20
     for _, r in ipairs(rows) do
         if kills > 0 then r.ownPct = (r.own or 0) / kills * 100 end
-        if kills >= minKills then
-            r.pct, r.tier = r.ownPct, "own"
-        elseif r.dbPct and r.dbSrc ~= "c" then
+        if r.dbPct and r.dbSrc ~= "c" then
             r.pct, r.tier = r.dbPct, "forever"
         elseif r.dbPct then
             r.pct, r.tier = r.dbPct, "classic"
-        elseif r.own and kills > 0 then
-            r.pct, r.tier = r.ownPct, "ownlow"
+        elseif r.own and kills >= minKills then
+            r.pct, r.tier = r.ownPct, "own"
         else
             r.pct, r.tier = nil, "seen"
         end
